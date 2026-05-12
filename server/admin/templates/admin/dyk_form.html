@@ -3,44 +3,83 @@
 {% block page_title %}{{ 'Edit' if item else 'New' }} Did You Know Entry{% endblock %}
 {% block content %}
 {% set action = url_for('admin.dyk_update', id=item.id) if item else url_for('admin.dyk_create') %}
-<div class="card" style="max-width:800px">
+<div class="card" style="max-width:900px">
   <form method="post" action="{{ action }}">
     <div class="form-grid">
+
       <div class="form-group">
         <label>Emoji *</label>
-        <input type="text" name="emoji" value="{{ item.emoji if item }}" maxlength="10" required placeholder="☕" />
-      </div>
-      <div class="form-group">
-        <label>Label *</label>
-        <input type="text" name="label" value="{{ item.label if item }}" required placeholder="e.g. Coffee Culture" />
+        <input type="text" name="emoji" value="{{ item.emoji if item }}" placeholder="☕" required />
       </div>
       <div class="form-group">
         <label>Category *</label>
-        <input type="text" name="category" value="{{ item.category if item }}" required placeholder="e.g. Culture, History" />
+        <input type="text" name="category" value="{{ item.category if item }}" placeholder="e.g. Culture, History" required />
       </div>
       <div class="form-group">
-        <label>Accent Color * (hex)</label>
-        <div style="display:flex;align-items:center;gap:8px">
-          <input type="text" name="accent_color" id="accent_color"
-            value="{{ item.accent_color if item else '#6B3A2A' }}"
-            required pattern="^#[0-9A-Fa-f]{6}$" placeholder="#6B3A2A"
-            oninput="document.getElementById('color_prev').style.background=this.value" />
-          <span id="color_prev" class="color-preview"
-            style="background:{{ item.accent_color if item else '#6B3A2A' }}"></span>
+        <label>Accent Color * <span class="hint">(hex)</span></label>
+        <input type="text" id="accent_color" name="accent_color"
+          value="{{ item.accent_color if item else '#6B3A2A' }}"
+          placeholder="#6B3A2A"
+          oninput="document.getElementById('color_preview').style.background=this.value" />
+        <span id="color_preview" class="color-preview"
+          style="background:{{ item.accent_color if item else '#6B3A2A' }}"></span>
+      </div>
+      <div class="form-group">
+        <label>Source <span class="hint">(optional)</span></label>
+        <input type="text" id="source" name="source" value="{{ item.source if item }}" placeholder="Historical reference..." />
+      </div>
+      <div class="form-group span2">
+        <label>Label * (English)</label>
+        <input type="text" id="label" name="label" value="{{ item.label if item }}" placeholder="e.g. Coffee Culture" required />
+      </div>
+      <div class="form-group span2">
+        <label>Fact * (English) <span class="hint">short teaser shown on card</span></label>
+        <textarea id="fact" name="fact" rows="3" required>{{ item.fact if item }}</textarea>
+      </div>
+      <div class="form-group span2">
+        <label>Detail * (English) <span class="hint">full body shown on detail page</span></label>
+        <textarea id="detail" name="detail" rows="7" required>{{ item.detail if item }}</textarea>
+      </div>
+
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🌐 Translations</label>
+      </div>
+
+      {% for lang_code, lang_label in [('am','አማርኛ (Amharic)'),('om','Afaan Oromo')] %}
+      <div class="form-group span2">
+        <label>Label — {{ lang_label }}</label>
+        <div class="trans-group">
+          <input type="text" id="label_{{ lang_code }}" name="label_{{ lang_code }}"
+            value="{{ item['label_'+lang_code] if item and item['label_'+lang_code] else '' }}" placeholder="{{ lang_label }}..." />
+          <button type="button" class="trans-btn" onclick="autoTranslate('label','label_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
         </div>
       </div>
       <div class="form-group span2">
-        <label>Fact * (short teaser, max 600 chars)</label>
-        <textarea name="fact" rows="3" maxlength="600" required>{{ item.fact if item }}</textarea>
+        <label>Fact — {{ lang_label }}</label>
+        <div class="trans-group">
+          <textarea id="fact_{{ lang_code }}" name="fact_{{ lang_code }}" rows="3"
+            placeholder="{{ lang_label }}...">{{ item['fact_'+lang_code] if item and item['fact_'+lang_code] else '' }}</textarea>
+          <button type="button" class="trans-btn" onclick="autoTranslate('fact','fact_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+        </div>
       </div>
       <div class="form-group span2">
-        <label>Detail * (full body text)</label>
-        <textarea name="detail" rows="8" required>{{ item.detail if item }}</textarea>
+        <label>Detail — {{ lang_label }}</label>
+        <div class="trans-group">
+          <textarea id="detail_{{ lang_code }}" name="detail_{{ lang_code }}" rows="6"
+            placeholder="{{ lang_label }}...">{{ item['detail_'+lang_code] if item and item['detail_'+lang_code] else '' }}</textarea>
+          <button type="button" class="trans-btn" onclick="autoTranslate('detail','detail_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+        </div>
       </div>
       <div class="form-group span2">
-        <label>Source</label>
-        <input type="text" name="source" value="{{ item.source if item }}" placeholder="Historical or academic reference" />
+        <label>Source — {{ lang_label }} <span class="hint">(optional)</span></label>
+        <div class="trans-group">
+          <input type="text" id="source_{{ lang_code }}" name="source_{{ lang_code }}"
+            value="{{ item['source_'+lang_code] if item and item['source_'+lang_code] else '' }}" placeholder="{{ lang_label }}..." />
+          <button type="button" class="trans-btn" onclick="autoTranslate('source','source_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+        </div>
       </div>
+      {% endfor %}
+
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">{{ 'Save Changes' if item else 'Create Entry' }}</button>

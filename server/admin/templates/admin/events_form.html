@@ -3,46 +3,75 @@
 {% block page_title %}{{ 'Edit' if item else 'New' }} Event{% endblock %}
 {% block content %}
 {% set action = url_for('admin.events_update', id=item.id) if item else url_for('admin.events_create') %}
-<div class="card" style="max-width:800px">
+<div class="card" style="max-width:900px">
   <form method="post" action="{{ action }}" enctype="multipart/form-data">
     <div class="form-grid">
+
       <div class="form-group span2">
-        <label>Title *</label>
-        <input type="text" name="title" value="{{ item.title if item }}" required />
-      </div>
-      <div class="form-group span2">
-        <label>Location *</label>
-        <input type="text" name="location" value="{{ item.location if item }}" required />
+        <label>Title * (English)</label>
+        <input type="text" id="title" name="title" value="{{ item.title if item }}" required />
       </div>
       <div class="form-group">
-        <label>Start Date & Time *</label>
+        <label>Start Date *</label>
         <input type="datetime-local" name="start_date"
           value="{{ item.start_date.strftime('%Y-%m-%dT%H:%M') if item }}" required />
       </div>
       <div class="form-group">
-        <label>End Date & Time *</label>
+        <label>End Date *</label>
         <input type="datetime-local" name="end_date"
           value="{{ item.end_date.strftime('%Y-%m-%dT%H:%M') if item }}" required />
+      </div>
+      <div class="form-group span2">
+        <label>Location * (English)</label>
+        <input type="text" id="location" name="location" value="{{ item.location if item }}" required />
       </div>
       <div class="form-group">
         <label>Image Upload</label>
         <input type="file" name="image" accept="image/*" />
         {% if item and item.image_url %}
-          <span class="hint">Current: <a href="{{ item.image_url }}" target="_blank">view</a> — upload to replace</span>
+          <span class="hint">Current: <a href="{{ item.image_url }}" target="_blank">view</a></span>
         {% endif %}
       </div>
       <div class="form-group">
-        <label>Image URL</label>
-        <input type="text" name="image_url" value="{{ item.image_url if item }}" placeholder="https://... (optional)" />
-      </div>
-      <div class="form-group">
         <label>Video URL <span class="hint">(optional)</span></label>
-        <input type="text" name="video_url" value="{{ item.video_url if item }}" placeholder="https://... (optional)" />
+        <input type="text" name="video_url" value="{{ item.video_url if item }}" />
       </div>
       <div class="form-group span2">
-        <label>Description *</label>
-        <textarea name="description" rows="6" required>{{ item.description if item }}</textarea>
+        <label>Description * (English)</label>
+        <textarea id="description" name="description" rows="5" required>{{ item.description if item }}</textarea>
       </div>
+
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🌐 Translations</label>
+      </div>
+
+      {% for lang_code, lang_label in [('am','አማርኛ (Amharic)'),('om','Afaan Oromo')] %}
+      <div class="form-group span2">
+        <label>Title — {{ lang_label }}</label>
+        <div class="trans-group">
+          <input type="text" id="title_{{ lang_code }}" name="title_{{ lang_code }}"
+            value="{{ item['title_'+lang_code] if item and item['title_'+lang_code] else '' }}" placeholder="{{ lang_label }} translation..." />
+          <button type="button" class="trans-btn" onclick="autoTranslate('title','title_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+        </div>
+      </div>
+      <div class="form-group span2">
+        <label>Location — {{ lang_label }}</label>
+        <div class="trans-group">
+          <input type="text" id="location_{{ lang_code }}" name="location_{{ lang_code }}"
+            value="{{ item['location_'+lang_code] if item and item['location_'+lang_code] else '' }}" placeholder="{{ lang_label }} translation..." />
+          <button type="button" class="trans-btn" onclick="autoTranslate('location','location_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+        </div>
+      </div>
+      <div class="form-group span2">
+        <label>Description — {{ lang_label }}</label>
+        <div class="trans-group">
+          <textarea id="description_{{ lang_code }}" name="description_{{ lang_code }}" rows="4"
+            placeholder="{{ lang_label }} translation...">{{ item['description_'+lang_code] if item and item['description_'+lang_code] else '' }}</textarea>
+          <button type="button" class="trans-btn" onclick="autoTranslate('description','description_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+        </div>
+      </div>
+      {% endfor %}
+
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">{{ 'Save Changes' if item else 'Create Event' }}</button>

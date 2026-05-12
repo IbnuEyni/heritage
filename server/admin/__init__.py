@@ -3,9 +3,10 @@ from functools import wraps
 from datetime import datetime
 
 from flask import (Blueprint, render_template, request, redirect,
-                   url_for, session, flash)
+                   url_for, session, flash, jsonify)
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
+from googletrans import Translator
 
 from extensions import db
 from models.models import Admin, Heritage, News, Hero, Dictionary, Event, DidYouKnow
@@ -15,6 +16,7 @@ admin_bp = Blueprint('admin', __name__,
                      url_prefix='/admin')
 
 ALLOWED = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+_translator = Translator()
 
 
 def _allowed(filename):
@@ -42,6 +44,28 @@ def _save_upload(file, subfolder='heritage'):
     lan_ip = socket.gethostbyname(socket.gethostname())
     host = request.host_url.rstrip('/').replace('localhost', lan_ip).replace('127.0.0.1', lan_ip)
     return f"{host}/uploads/{subfolder}/{filename}"
+
+
+# ── Auto-translate API (used by admin forms via JS) ──────────────────────────
+
+@admin_bp.post('/translate')
+@login_required
+def translate():
+    body = request.get_json(silent=True) or {}
+    text = (body.get('text') or '').strip()
+    dest = (body.get('dest') or 'am').strip()
+    if not text:
+        return jsonify({'error': 'text is required'}), 400
+    if dest not in ('am', 'om', 'en'):
+        return jsonify({'error': 'dest must be am, om, or en'}), 400
+    # Google Translate does not support Oromo (om) — must be entered manually
+    if dest == 'om':
+        return jsonify({'error': 'Oromo (Afaan Oromo) is not supported by Google Translate. Please enter the translation manually.'}), 422
+    try:
+        result = _translator.translate(text, dest=dest)
+        return jsonify({'translated': result.text})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 502
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
@@ -108,6 +132,12 @@ def heritage_create():
     image_url = _save_upload(request.files.get('image'), 'heritage') or f.get('image_url') or None
     item = Heritage(
         title=f['title'], content=f['content'], era=f['era'],
+        title_am=f.get('title_am') or None,
+        title_om=f.get('title_om') or None,
+        content_am=f.get('content_am') or None,
+        content_om=f.get('content_om') or None,
+        era_am=f.get('era_am') or None,
+        era_om=f.get('era_om') or None,
         image_url=image_url,
         video_url=f.get('video_url') or None,
         audio_url=f.get('audio_url') or None,
@@ -134,6 +164,12 @@ def heritage_update(id):
     item.title = f['title']
     item.content = f['content']
     item.era = f['era']
+    item.title_am = f.get('title_am') or None
+    item.title_om = f.get('title_om') or None
+    item.content_am = f.get('content_am') or None
+    item.content_om = f.get('content_om') or None
+    item.era_am = f.get('era_am') or None
+    item.era_om = f.get('era_om') or None
     item.image_url = image_url
     item.video_url = f.get('video_url') or None
     item.audio_url = f.get('audio_url') or None
@@ -173,6 +209,10 @@ def news_create():
     image_url = _save_upload(request.files.get('image'), 'news') or f.get('image_url') or None
     item = News(
         title=f['title'], content=f['content'],
+        title_am=f.get('title_am') or None,
+        title_om=f.get('title_om') or None,
+        content_am=f.get('content_am') or None,
+        content_om=f.get('content_om') or None,
         category=f.get('category', 'News'),
         image_url=image_url,
         video_url=f.get('video_url') or None,
@@ -198,6 +238,10 @@ def news_update(id):
     image_url = _save_upload(request.files.get('image'), 'news') or f.get('image_url') or item.image_url
     item.title = f['title']
     item.content = f['content']
+    item.title_am = f.get('title_am') or None
+    item.title_om = f.get('title_om') or None
+    item.content_am = f.get('content_am') or None
+    item.content_om = f.get('content_om') or None
     item.category = f.get('category', 'News')
     item.image_url = image_url
     item.video_url = f.get('video_url') or None
@@ -237,11 +281,26 @@ def heroes_create():
     image_url = _save_upload(request.files.get('image'), 'heroes') or f.get('image_url') or None
     item = Hero(
         name=f['name'], title=f['title'], era=f['era'],
+        name_am=f.get('name_am') or None,
+        name_om=f.get('name_om') or None,
+        title_am=f.get('title_am') or None,
+        title_om=f.get('title_om') or None,
+        era_am=f.get('era_am') or None,
+        era_om=f.get('era_om') or None,
         birth_year=f.get('birth_year') or None,
         death_year=f.get('death_year') or None,
-        short_bio=f['short_bio'], full_story=f['full_story'],
+        short_bio=f['short_bio'],
+        short_bio_am=f.get('short_bio_am') or None,
+        short_bio_om=f.get('short_bio_om') or None,
+        full_story=f['full_story'],
+        full_story_am=f.get('full_story_am') or None,
+        full_story_om=f.get('full_story_om') or None,
         legacy=f['legacy'],
+        legacy_am=f.get('legacy_am') or None,
+        legacy_om=f.get('legacy_om') or None,
         bravery_quote=f.get('bravery_quote') or None,
+        bravery_quote_am=f.get('bravery_quote_am') or None,
+        bravery_quote_om=f.get('bravery_quote_om') or None,
         image_url=image_url,
         category=f['category'],
     )
@@ -267,12 +326,26 @@ def heroes_update(id):
     item.name = f['name']
     item.title = f['title']
     item.era = f['era']
+    item.name_am = f.get('name_am') or None
+    item.name_om = f.get('name_om') or None
+    item.title_am = f.get('title_am') or None
+    item.title_om = f.get('title_om') or None
+    item.era_am = f.get('era_am') or None
+    item.era_om = f.get('era_om') or None
     item.birth_year = f.get('birth_year') or None
     item.death_year = f.get('death_year') or None
     item.short_bio = f['short_bio']
+    item.short_bio_am = f.get('short_bio_am') or None
+    item.short_bio_om = f.get('short_bio_om') or None
     item.full_story = f['full_story']
+    item.full_story_am = f.get('full_story_am') or None
+    item.full_story_om = f.get('full_story_om') or None
     item.legacy = f['legacy']
+    item.legacy_am = f.get('legacy_am') or None
+    item.legacy_om = f.get('legacy_om') or None
     item.bravery_quote = f.get('bravery_quote') or None
+    item.bravery_quote_am = f.get('bravery_quote_am') or None
+    item.bravery_quote_om = f.get('bravery_quote_om') or None
     item.image_url = image_url
     item.category = f['category']
     db.session.commit()
@@ -312,10 +385,13 @@ def dictionary_create():
         kebena_word=f['kebena_word'],
         amharic_translation=f['amharic_translation'],
         english_translation=f['english_translation'],
+        oromo_translation=f.get('oromo_translation') or None,
         category=f.get('category') or None,
         audio_url=f.get('audio_url') or None,
         image_url=f.get('image_url') or None,
         examples=[l.strip() for l in f.get('examples', '').splitlines() if l.strip()],
+        examples_am=[l.strip() for l in f.get('examples_am', '').splitlines() if l.strip()],
+        examples_om=[l.strip() for l in f.get('examples_om', '').splitlines() if l.strip()],
         synonyms=[l.strip() for l in f.get('synonyms', '').splitlines() if l.strip()],
     )
     db.session.add(item)
@@ -339,10 +415,13 @@ def dictionary_update(id):
     item.kebena_word = f['kebena_word']
     item.amharic_translation = f['amharic_translation']
     item.english_translation = f['english_translation']
+    item.oromo_translation = f.get('oromo_translation') or None
     item.category = f.get('category') or None
     item.audio_url = f.get('audio_url') or None
     item.image_url = f.get('image_url') or None
     item.examples = [l.strip() for l in f.get('examples', '').splitlines() if l.strip()]
+    item.examples_am = [l.strip() for l in f.get('examples_am', '').splitlines() if l.strip()]
+    item.examples_om = [l.strip() for l in f.get('examples_om', '').splitlines() if l.strip()]
     item.synonyms = [l.strip() for l in f.get('synonyms', '').splitlines() if l.strip()]
     db.session.commit()
     flash('Word updated.', 'success')
@@ -380,7 +459,13 @@ def events_create():
     image_url = _save_upload(request.files.get('image'), 'events') or f.get('image_url') or None
     item = Event(
         title=f['title'], description=f['description'],
+        title_am=f.get('title_am') or None,
+        title_om=f.get('title_om') or None,
+        description_am=f.get('description_am') or None,
+        description_om=f.get('description_om') or None,
         location=f['location'],
+        location_am=f.get('location_am') or None,
+        location_om=f.get('location_om') or None,
         start_date=datetime.fromisoformat(f['start_date']),
         end_date=datetime.fromisoformat(f['end_date']),
         image_url=image_url,
@@ -407,7 +492,13 @@ def events_update(id):
     image_url = _save_upload(request.files.get('image'), 'events') or f.get('image_url') or item.image_url
     item.title = f['title']
     item.description = f['description']
+    item.title_am = f.get('title_am') or None
+    item.title_om = f.get('title_om') or None
+    item.description_am = f.get('description_am') or None
+    item.description_om = f.get('description_om') or None
     item.location = f['location']
+    item.location_am = f.get('location_am') or None
+    item.location_om = f.get('location_om') or None
     item.start_date = datetime.fromisoformat(f['start_date'])
     item.end_date = datetime.fromisoformat(f['end_date'])
     item.image_url = image_url
@@ -447,9 +538,18 @@ def dyk_create():
     f = request.form
     item = DidYouKnow(
         emoji=f['emoji'], label=f['label'],
-        fact=f['fact'], detail=f['detail'],
+        label_am=f.get('label_am') or None,
+        label_om=f.get('label_om') or None,
+        fact=f['fact'],
+        fact_am=f.get('fact_am') or None,
+        fact_om=f.get('fact_om') or None,
+        detail=f['detail'],
+        detail_am=f.get('detail_am') or None,
+        detail_om=f.get('detail_om') or None,
         accent_color=f['accent_color'],
         source=f.get('source') or None,
+        source_am=f.get('source_am') or None,
+        source_om=f.get('source_om') or None,
         category=f['category'],
     )
     db.session.add(item)
@@ -472,10 +572,18 @@ def dyk_update(id):
     f = request.form
     item.emoji = f['emoji']
     item.label = f['label']
+    item.label_am = f.get('label_am') or None
+    item.label_om = f.get('label_om') or None
     item.fact = f['fact']
+    item.fact_am = f.get('fact_am') or None
+    item.fact_om = f.get('fact_om') or None
     item.detail = f['detail']
+    item.detail_am = f.get('detail_am') or None
+    item.detail_om = f.get('detail_om') or None
     item.accent_color = f['accent_color']
     item.source = f.get('source') or None
+    item.source_am = f.get('source_am') or None
+    item.source_om = f.get('source_om') or None
     item.category = f['category']
     db.session.commit()
     flash('Did You Know entry updated.', 'success')

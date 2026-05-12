@@ -3,41 +3,72 @@
 {% block page_title %}{{ 'Edit' if item else 'New' }} Dictionary Word{% endblock %}
 {% block content %}
 {% set action = url_for('admin.dictionary_update', id=item.id) if item else url_for('admin.dictionary_create') %}
-<div class="card" style="max-width:700px">
+<div class="card" style="max-width:900px">
   <form method="post" action="{{ action }}">
     <div class="form-grid">
-      <div class="form-group">
-        <label>Kebena Word *</label>
-        <input type="text" name="kebena_word" value="{{ item.kebena_word if item }}" required />
-      </div>
-      <div class="form-group">
-        <label>Category</label>
-        <input type="text" name="category" value="{{ item.category if item }}" placeholder="e.g. Greetings, Food" />
-      </div>
-      <div class="form-group">
-        <label>Amharic Translation *</label>
-        <input type="text" name="amharic_translation" value="{{ item.amharic_translation if item }}" required />
+
+      <div class="form-group span2">
+        <label>Kebena Word (Affoo) *</label>
+        <input type="text" id="kebena_word" name="kebena_word" value="{{ item.kebena_word if item }}" required />
       </div>
       <div class="form-group">
         <label>English Translation *</label>
-        <input type="text" name="english_translation" value="{{ item.english_translation if item }}" required />
+        <input type="text" id="english_translation" name="english_translation" value="{{ item.english_translation if item }}" required />
+      </div>
+      <div class="form-group">
+        <label>Amharic Translation * (አማርኛ)</label>
+        <div class="trans-group">
+          <input type="text" id="amharic_translation" name="amharic_translation" value="{{ item.amharic_translation if item }}" required />
+          <button type="button" class="trans-btn" onclick="autoTranslate('english_translation','amharic_translation','am')">🌐 Auto-translate</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Oromo Translation (Afaan Oromo)</label>
+        <div class="trans-group">
+          <input type="text" id="oromo_translation" name="oromo_translation" value="{{ item.oromo_translation if item }}" placeholder="Optional..." />
+          <button type="button" class="trans-btn" onclick="autoTranslate('english_translation','oromo_translation','om')">🌐 Auto-translate</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Category <span class="hint">(optional)</span></label>
+        <input type="text" name="category" value="{{ item.category if item }}" placeholder="e.g. Noun, Verb, Food..." />
       </div>
       <div class="form-group">
         <label>Audio URL <span class="hint">(optional)</span></label>
-        <input type="text" name="audio_url" value="{{ item.audio_url if item }}" placeholder="https://... (optional)" />
+        <input type="text" name="audio_url" value="{{ item.audio_url if item }}" />
       </div>
       <div class="form-group">
         <label>Image URL <span class="hint">(optional)</span></label>
-        <input type="text" name="image_url" value="{{ item.image_url if item }}" placeholder="https://... (optional)" />
-      </div>
-      <div class="form-group span2">
-        <label>Example Sentences <span class="hint">(one per line)</span></label>
-        <textarea name="examples" rows="4" placeholder="Akkam jirta?&#10;Nagaa argadhu.">{{ (item.examples or []) | join('\n') if item }}</textarea>
+        <input type="text" name="image_url" value="{{ item.image_url if item }}" />
       </div>
       <div class="form-group span2">
         <label>Synonyms <span class="hint">(one per line)</span></label>
-        <textarea name="synonyms" rows="3" placeholder="Salaam&#10;Nagaa">{{ (item.synonyms or []) | join('\n') if item }}</textarea>
+        <textarea name="synonyms" rows="3" placeholder="One synonym per line">{{ (item.synonyms or []) | join('\n') if item }}</textarea>
       </div>
+
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🌐 Example Sentences</label>
+      </div>
+
+      <div class="form-group span2">
+        <label>Examples — English <span class="hint">(one per line)</span></label>
+        <textarea id="examples" name="examples" rows="4" placeholder="One example per line">{{ (item.examples or []) | join('\n') if item }}</textarea>
+      </div>
+      <div class="form-group span2">
+        <label>Examples — አማርኛ <span class="hint">(one per line)</span></label>
+        <div class="trans-group">
+          <textarea id="examples_am" name="examples_am" rows="4" placeholder="Amharic examples...">{{ (item.examples_am or []) | join('\n') if item }}</textarea>
+          <button type="button" class="trans-btn" onclick="autoTranslate('examples','examples_am','am')">🌐 Auto-translate</button>
+        </div>
+      </div>
+      <div class="form-group span2">
+        <label>Examples — Afaan Oromo <span class="hint">(one per line)</span></label>
+        <div class="trans-group">
+          <textarea id="examples_om" name="examples_om" rows="4" placeholder="Oromo examples...">{{ (item.examples_om or []) | join('\n') if item }}</textarea>
+          <button type="button" class="trans-btn" onclick="autoTranslate('examples','examples_om','om')">🌐 Auto-translate</button>
+        </div>
+      </div>
+
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">{{ 'Save Changes' if item else 'Add Word' }}</button>

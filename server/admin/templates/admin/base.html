@@ -98,7 +98,61 @@
     .login-box h1 { font-size: 1.4rem; margin-bottom: 6px; }
     .login-box p { color: var(--muted); font-size: .875rem; margin-bottom: 28px; }
     .color-preview { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); display: inline-block; vertical-align: middle; margin-left: 8px; }
+
+    /* Translation */
+    .trans-group { position: relative; }
+    .trans-btn { position: absolute; top: 6px; right: 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--accent2); border-radius: 6px; padding: 3px 8px; font-size: .72rem; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background .15s; z-index: 1; }
+    .trans-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .trans-btn.loading { opacity: .6; pointer-events: none; }
+    .lang-tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 1px solid var(--border); }
+    .lang-tab { padding: 8px 18px; font-size: .8rem; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .15s, border-color .15s; }
+    .lang-tab.active { color: var(--accent2); border-bottom-color: var(--accent2); font-weight: 600; }
+    .lang-panel { display: none; padding-top: 14px; }
+    .lang-panel.active { display: block; }
   </style>
+  <script>
+    async function autoTranslate(sourceId, targetId, dest) {
+      const text = document.getElementById(sourceId)?.value?.trim();
+      if (!text) return;
+      const btn = event.currentTarget;
+      btn.classList.add('loading');
+      btn.textContent = '⏳ Translating…';
+      try {
+        const res = await fetch('/admin/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, dest })
+        });
+        const data = await res.json();
+        if (data.translated) {
+          const el = document.getElementById(targetId);
+          el.value = data.translated;
+          el.style.borderColor = 'var(--success)';
+          setTimeout(() => el.style.borderColor = '', 1500);
+        } else if (res.status === 422) {
+          // Language not supported (e.g. Oromo) — highlight field for manual entry
+          const el = document.getElementById(targetId);
+          el.style.borderColor = 'var(--warning)';
+          el.placeholder = '⚠️ ' + data.error;
+          setTimeout(() => el.style.borderColor = '', 3000);
+        } else {
+          alert('Translation failed: ' + (data.error || 'unknown error'));
+        }
+      } catch(e) {
+        alert('Network error: ' + e.message);
+      } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = '🌐 Auto-translate';
+      }
+    }
+
+    function showLangTab(groupId, lang) {
+      document.querySelectorAll(`#${groupId} .lang-tab`).forEach(t => t.classList.remove('active'));
+      document.querySelectorAll(`#${groupId} .lang-panel`).forEach(p => p.classList.remove('active'));
+      document.querySelector(`#${groupId} .lang-tab[data-lang="${lang}"]`).classList.add('active');
+      document.querySelector(`#${groupId} .lang-panel[data-lang="${lang}"]`).classList.add('active');
+    }
+  </script>
 </head>
 <body>
 {% if session.get('admin_id') %}
