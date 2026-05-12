@@ -48,7 +48,6 @@ class _AppShellState extends State<AppShell> {
         currentIndex: _index,
         onTap: _onTap,
         isDark: isDark,
-        items: _items,
       ),
     );
   }
@@ -59,19 +58,17 @@ class _FloatingNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
   final bool isDark;
-  final List<_NavItem> items;
 
   const _FloatingNav({
     required this.currentIndex,
     required this.onTap,
     required this.isDark,
-    required this.items,
   });
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final _items = [
+    final items = [
       _NavItem(Icons.account_balance_outlined, Icons.account_balance_rounded, l.navHeritage),
       _NavItem(Icons.menu_book_outlined,        Icons.menu_book_rounded,        l.navDictionary),
       _NavItem(Icons.home_rounded,              Icons.home_rounded,             l.navHome),

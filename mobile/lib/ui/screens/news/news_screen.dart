@@ -249,7 +249,7 @@ class _PaginationBar extends StatelessWidget {
             onTap: page > 1
                 ? () => ref.read(newsPageProvider.notifier).state--
                 : null,
-            child: Text('← Previous',
+            child: Text(AppLocalizations.of(context)!.previousPage,
                 style: TextStyle(
                     color: page > 1
                         ? primary
@@ -262,7 +262,7 @@ class _PaginationBar extends StatelessWidget {
             onTap: hasNext
                 ? () => ref.read(newsPageProvider.notifier).state++
                 : null,
-            child: Text('Next →',
+            child: Text(AppLocalizations.of(context)!.nextPage,
                 style: TextStyle(
                     color: hasNext
                         ? primary

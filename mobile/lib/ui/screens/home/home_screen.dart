@@ -224,7 +224,7 @@ class _AppBarFlexible extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Kebena Heritage',
+                                    AppLocalizations.of(context)!.appTitle,
                                     style: TextStyle(
                                       color: fgColor,
                                       fontSize: 16,
@@ -233,7 +233,7 @@ class _AppBarFlexible extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Special Woreda Portal',
+                                    AppLocalizations.of(context)!.appSubtitle,
                                     style: TextStyle(
                                       color: fgColor.withValues(alpha: 0.6),
                                       fontSize: 11,
