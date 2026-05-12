@@ -1,0 +1,279 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Kebena Heritage",
+  "@appTitle": { "description": "App title" },
+
+  "appSubtitle": "Special Woreda Portal",
+  "@appSubtitle": { "description": "App subtitle shown in collapsed app bar" },
+
+  "askKebenaAI": "Ask Kebena AI",
+  "@askKebenaAI": { "description": "FAB label on home screen" },
+
+  "goodEvening": "Good Evening,",
+  "@goodEvening": { "description": "Greeting on home screen banner" },
+
+  "exploreKebena": "Explore Kebena",
+  "@exploreKebena": { "description": "Hero title on home screen" },
+
+  "wordOfTheDay": "WORD OF THE DAY",
+  "@wordOfTheDay": { "description": "Word of the day label" },
+
+  "didYouKnow": "Did You Know?",
+  "@didYouKnow": { "description": "Did you know section header" },
+
+  "kebenaHeroes": "Kebena Heroes",
+  "@kebenaHeroes": { "description": "Heroes section header" },
+
+  "latestNews": "Latest News",
+  "@latestNews": { "description": "News section header" },
+
+  "quickFacts": "Quick Facts",
+  "@quickFacts": { "description": "Quick facts section header" },
+
+  "seeAll": "See all",
+  "@seeAll": { "description": "See all action label" },
+
+  "readMore": "Read more",
+  "@readMore": { "description": "Read more action label" },
+
+  "read": "Read",
+  "@read": { "description": "Short read label on hero cards" },
+
+  "navHome": "Home",
+  "@navHome": { "description": "Bottom nav home label" },
+
+  "navHeritage": "Heritage",
+  "@navHeritage": { "description": "Bottom nav heritage label" },
+
+  "navDictionary": "Dictionary",
+  "@navDictionary": { "description": "Bottom nav dictionary label" },
+
+  "navNews": "News",
+  "@navNews": { "description": "Bottom nav news label" },
+
+  "navHeroes": "Heroes",
+  "@navHeroes": { "description": "Bottom nav heroes label" },
+
+  "heritageTimeline": "Heritage Timeline",
+  "@heritageTimeline": { "description": "Heritage screen app bar title" },
+
+  "noHeritageArticles": "No heritage articles yet",
+  "@noHeritageArticles": { "description": "Heritage empty state" },
+
+  "affooLanguage": "Affoo Language · Kebena Woreda",
+  "@affooLanguage": { "description": "Dictionary detail subtitle" },
+
+  "affooDictionary": "Affoo Dictionary",
+  "@affooDictionary": { "description": "Dictionary screen and detail app bar title" },
+
+  "searchHint": "Search Kebena, Amharic or English…",
+  "@searchHint": { "description": "Dictionary search field hint" },
+
+  "wordsInLibrary": "{count} words in the library",
+  "@wordsInLibrary": {
+    "description": "Word count label",
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "searchResults": "{count} result{count, plural, one{} other{s}} for \"{query}\"",
+  "@searchResults": {
+    "description": "Search results count label",
+    "placeholders": {
+      "count": { "type": "int" },
+      "query": { "type": "String" }
+    }
+  },
+
+  "noResultsFor": "No results for \"{query}\"",
+  "@noResultsFor": {
+    "description": "No search results title",
+    "placeholders": { "query": { "type": "String" } }
+  },
+
+  "tryDifferentSpelling": "Try a different spelling or language",
+  "@tryDifferentSpelling": { "description": "No results subtitle" },
+
+  "dictionaryEmpty": "Dictionary is empty",
+  "@dictionaryEmpty": { "description": "Empty dictionary title" },
+
+  "wordsWillAppear": "Words will appear here once synced",
+  "@wordsWillAppear": { "description": "Empty dictionary subtitle" },
+
+  "translations": "Translations",
+  "@translations": { "description": "Translations section title in word detail" },
+
+  "exampleSentences": "Example Sentences",
+  "@exampleSentences": { "description": "Example sentences section title" },
+
+  "synonyms": "Synonyms",
+  "@synonyms": { "description": "Synonyms section title" },
+
+  "copyWord": "Copy word",
+  "@copyWord": { "description": "Copy word tooltip" },
+
+  "wordCopied": "\"{word}\" copied",
+  "@wordCopied": {
+    "description": "Word copied snackbar",
+    "placeholders": { "word": { "type": "String" } }
+  },
+
+  "audioUnavailable": "Audio unavailable — check your connection",
+  "@audioUnavailable": { "description": "TTS error snackbar" },
+
+  "woredaNews": "Woreda News",
+  "@woredaNews": { "description": "News screen app bar title" },
+
+  "noNewsYet": "No news yet",
+  "@noNewsYet": { "description": "News empty state" },
+
+  "previousPage": "← Previous",
+  "@previousPage": { "description": "Pagination previous label" },
+
+  "nextPage": "Next →",
+  "@nextPage": { "description": "Pagination next label" },
+
+  "page": "Page {number}",
+  "@page": {
+    "description": "Pagination current page label",
+    "placeholders": { "number": { "type": "int" } }
+  },
+
+  "hallOfLegends": "HALL OF LEGENDS",
+  "@hallOfLegends": { "description": "Heroes screen badge" },
+
+  "heroesSubtitle": "Warriors, scholars & spiritual leaders\nwho shaped our history",
+  "@heroesSubtitle": { "description": "Heroes screen subtitle" },
+
+  "noHeroesFound": "No heroes found",
+  "@noHeroesFound": { "description": "Heroes empty state" },
+
+  "filterAll": "All",
+  "@filterAll": { "description": "Heroes filter all tab" },
+
+  "filterWarrior": "Warrior",
+  "@filterWarrior": { "description": "Heroes filter warrior tab" },
+
+  "filterScholar": "Scholar",
+  "@filterScholar": { "description": "Heroes filter scholar tab" },
+
+  "filterLeader": "Leader",
+  "@filterLeader": { "description": "Heroes filter leader tab" },
+
+  "filterSpiritual": "Spiritual",
+  "@filterSpiritual": { "description": "Heroes filter spiritual tab" },
+
+  "settings": "Settings",
+  "@settings": { "description": "Settings screen title" },
+
+  "appearance": "Appearance",
+  "@appearance": { "description": "Settings appearance section" },
+
+  "theme": "Theme",
+  "@theme": { "description": "Settings theme tile title" },
+
+  "themeDark": "Dark",
+  "@themeDark": { "description": "Dark theme label" },
+
+  "themeLight": "Light",
+  "@themeLight": { "description": "Light theme label" },
+
+  "themeSystem": "System default",
+  "@themeSystem": { "description": "System theme label" },
+
+  "notifications": "Notifications",
+  "@notifications": { "description": "Settings notifications section" },
+
+  "pushNotifications": "Push Notifications",
+  "@pushNotifications": { "description": "Push notifications tile title" },
+
+  "pushNotificationsSubtitle": "Receive alerts from the Woreda",
+  "@pushNotificationsSubtitle": { "description": "Push notifications tile subtitle" },
+
+  "woredaUpdates": "Woreda Updates",
+  "@woredaUpdates": { "description": "Woreda updates tile title" },
+
+  "woredaUpdatesSubtitle": "News and announcements",
+  "@woredaUpdatesSubtitle": { "description": "Woreda updates tile subtitle" },
+
+  "culturalEvents": "Cultural Events",
+  "@culturalEvents": { "description": "Cultural events tile title" },
+
+  "culturalEventsSubtitle": "Festivals and community gatherings",
+  "@culturalEventsSubtitle": { "description": "Cultural events tile subtitle" },
+
+  "dataSync": "Data & Sync",
+  "@dataSync": { "description": "Settings data section" },
+
+  "offlineMode": "Offline Mode",
+  "@offlineMode": { "description": "Offline mode tile title" },
+
+  "offlineModeSubtitle": "Use only cached data, skip network calls",
+  "@offlineModeSubtitle": { "description": "Offline mode tile subtitle" },
+
+  "syncNow": "Sync Now",
+  "@syncNow": { "description": "Sync now tile title" },
+
+  "syncNowSubtitle": "Refresh heritage & dictionary data",
+  "@syncNowSubtitle": { "description": "Sync now tile subtitle" },
+
+  "syncComplete": "Sync complete",
+  "@syncComplete": { "description": "Sync complete snackbar" },
+
+  "clearCache": "Clear Cache",
+  "@clearCache": { "description": "Clear cache tile title" },
+
+  "clearCacheSubtitle": "Remove all locally stored data",
+  "@clearCacheSubtitle": { "description": "Clear cache tile subtitle" },
+
+  "clearCacheDialogContent": "This will remove all locally stored heritage and dictionary data. You will need an internet connection to reload content.",
+  "@clearCacheDialogContent": { "description": "Clear cache dialog body" },
+
+  "cacheCleared": "Cache cleared",
+  "@cacheCleared": { "description": "Cache cleared snackbar" },
+
+  "cancel": "Cancel",
+  "@cancel": { "description": "Cancel button" },
+
+  "clear": "Clear",
+  "@clear": { "description": "Clear button" },
+
+  "language": "Language",
+  "@language": { "description": "Settings language section" },
+
+  "appLanguage": "App Language",
+  "@appLanguage": { "description": "App language tile title" },
+
+  "about": "About",
+  "@about": { "description": "Settings about section" },
+
+  "aboutApp": "About Kebena Heritage",
+  "@aboutApp": { "description": "About tile title" },
+
+  "version": "Version 1.0.0",
+  "@version": { "description": "Version tile subtitle" },
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": { "description": "Privacy policy tile title" },
+
+  "privacyPolicySubtitle": "How we handle your data",
+  "@privacyPolicySubtitle": { "description": "Privacy policy tile subtitle" },
+
+  "termsOfUse": "Terms of Use",
+  "@termsOfUse": { "description": "Terms of use tile title" },
+
+  "termsOfUseSubtitle": "Usage guidelines",
+  "@termsOfUseSubtitle": { "description": "Terms of use tile subtitle" },
+
+  "appFooter": "Kebena Heritage App v1.0.0\nBuilt with ❤️ for the Kebena Community",
+  "@appFooter": { "description": "Footer text in settings" },
+
+  "retry": "Retry",
+  "@retry": { "description": "Retry button label" },
+
+  "error": "Error: {message}",
+  "@error": {
+    "description": "Generic error message",
+    "placeholders": { "message": { "type": "String" } }
+  }
+}
