@@ -1,0 +1,36 @@
+# ── Flutter / Dart ────────────────────────────────────────────────────────────
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/build/
+mobile/.idea/
+mobile/*.iml
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/key.properties
+mobile/android/app/google-services.json
+mobile/ios/.symlinks/
+mobile/ios/Pods/
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Flutter.podspec
+mobile/.metadata
+
+# ── Python / Server ───────────────────────────────────────────────────────────
+server/__pycache__/
+server/**/__pycache__/
+server/*.pyc
+server/**/*.pyc
+server/.env
+server/server.log
+server/uploads/tts/
+server/serviceAccountKey.json
+server/venv/
+server/.venv/
+
+# ── General ───────────────────────────────────────────────────────────────────
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
