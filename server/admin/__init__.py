@@ -1,4 +1,7 @@
 import os
+import json
+import urllib.request
+import urllib.parse
 from functools import wraps
 from datetime import datetime
 
@@ -17,6 +20,19 @@ admin_bp = Blueprint('admin', __name__,
 
 ALLOWED = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 _translator = Translator()
+
+
+def _mymemory_translate(text, src='en', dest='om-ET'):
+    """MyMemory free API — supports Oromo (om-ET), no key needed."""
+    url = (
+        'https://api.mymemory.translated.net/get'
+        f'?q={urllib.parse.quote(text)}&langpair={src}|{dest}'
+    )
+    with urllib.request.urlopen(url, timeout=12) as r:
+        data = json.loads(r.read())
+    if data.get('responseStatus') != 200:
+        raise RuntimeError(data.get('responseDetails', 'MyMemory error'))
+    return data['responseData']['translatedText']
 
 
 def _allowed(filename):
@@ -58,12 +74,13 @@ def translate():
         return jsonify({'error': 'text is required'}), 400
     if dest not in ('am', 'om', 'en'):
         return jsonify({'error': 'dest must be am, om, or en'}), 400
-    # Google Translate does not support Oromo (om) — must be entered manually
-    if dest == 'om':
-        return jsonify({'error': 'Oromo (Afaan Oromo) is not supported by Google Translate. Please enter the translation manually.'}), 422
     try:
-        result = _translator.translate(text, dest=dest)
-        return jsonify({'translated': result.text})
+        if dest == 'om':
+            # Google Translate doesn't support Oromo — use MyMemory API
+            translated = _mymemory_translate(text, src='en', dest='om-ET')
+        else:
+            translated = _translator.translate(text, dest=dest).text
+        return jsonify({'translated': translated})
     except Exception as e:
         return jsonify({'error': str(e)}), 502
 

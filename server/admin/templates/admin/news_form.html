@@ -27,11 +27,11 @@
         {% endif %}
       </div>
       <div class="form-group">
-        <label>Image URL <span class="hint">(optional)</span></label>
+        <label>Image URL</label>
         <input type="text" name="image_url" value="{{ item.image_url if item }}" />
       </div>
       <div class="form-group">
-        <label>Video URL <span class="hint">(optional)</span></label>
+        <label>Video URL</label>
         <input type="text" name="video_url" value="{{ item.video_url if item }}" />
       </div>
       <div class="form-group span2">
@@ -39,38 +39,31 @@
         <textarea id="content" name="content" rows="8" required>{{ item.content if item }}</textarea>
       </div>
 
-      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
-        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🌐 Translations</label>
+      {% for lang_code, lang_label, lang_flag in [('am','አማርኛ (Amharic)','🇪🇹'),('om','Afaan Oromo','🏛️')] %}
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">{{ lang_flag }} {{ lang_label }}</label>
+        <button type="button" class="btn btn-sm btn-primary" data-label="🌐 Translate All to {{ lang_label }}"
+          onclick="translateAll('{{ lang_code }}')" style="font-size:.75rem">🌐 Translate All to {{ lang_label }}</button>
       </div>
-
       <div class="form-group span2">
-        <label>Title — አማርኛ</label>
+        <label>Title — {{ lang_label }}</label>
         <div class="trans-group">
-          <input type="text" id="title_am" name="title_am" value="{{ item.title_am if item }}" placeholder="Amharic translation..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('title','title_am','am')">🌐 Auto-translate</button>
+          <input type="text" id="title_{{ lang_code }}" name="title_{{ lang_code }}"
+            value="{{ item['title_'+lang_code] if item and item['title_'+lang_code] else '' }}" placeholder="{{ lang_label }}..." />
+          <button type="button" class="trans-btn" data-source="title" data-target="title_{{ lang_code }}" data-dest="{{ lang_code }}"
+            onclick="autoTranslate('title','title_{{ lang_code }}','{{ lang_code }}')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
-        <label>Content — አማርኛ</label>
+        <label>Content — {{ lang_label }}</label>
         <div class="trans-group">
-          <textarea id="content_am" name="content_am" rows="6" placeholder="Amharic translation...">{{ item.content_am if item }}</textarea>
-          <button type="button" class="trans-btn" onclick="autoTranslate('content','content_am','am')">🌐 Auto-translate</button>
+          <textarea id="content_{{ lang_code }}" name="content_{{ lang_code }}" rows="6"
+            placeholder="{{ lang_label }}...">{{ item['content_'+lang_code] if item and item['content_'+lang_code] else '' }}</textarea>
+          <button type="button" class="trans-btn" data-source="content" data-target="content_{{ lang_code }}" data-dest="{{ lang_code }}"
+            onclick="autoTranslate('content','content_{{ lang_code }}','{{ lang_code }}')">🌐</button>
         </div>
       </div>
-      <div class="form-group span2">
-        <label>Title — Afaan Oromo</label>
-        <div class="trans-group">
-          <input type="text" id="title_om" name="title_om" value="{{ item.title_om if item }}" placeholder="Oromo translation..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('title','title_om','om')">🌐 Auto-translate</button>
-        </div>
-      </div>
-      <div class="form-group span2">
-        <label>Content — Afaan Oromo</label>
-        <div class="trans-group">
-          <textarea id="content_om" name="content_om" rows="6" placeholder="Oromo translation...">{{ item.content_om if item }}</textarea>
-          <button type="button" class="trans-btn" onclick="autoTranslate('content','content_om','om')">🌐 Auto-translate</button>
-        </div>
-      </div>
+      {% endfor %}
 
     </div>
     <div class="form-actions">

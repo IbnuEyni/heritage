@@ -7,7 +7,7 @@
   <form method="post" action="{{ action }}" enctype="multipart/form-data">
     <div class="form-grid">
 
-      {# ── English (required) ── #}
+      {# ── English ── #}
       <div class="form-group span2">
         <label>Title * (English)</label>
         <input type="text" id="title" name="title" value="{{ item.title if item }}" required />
@@ -20,19 +20,19 @@
         <label>Image Upload</label>
         <input type="file" name="image" accept="image/*" />
         {% if item and item.image_url %}
-          <span class="hint">Current: <a href="{{ item.image_url }}" target="_blank">view</a> — upload to replace</span>
+          <span class="hint">Current: <a href="{{ item.image_url }}" target="_blank">view</a></span>
         {% endif %}
       </div>
       <div class="form-group">
         <label>Image URL <span class="hint">(optional)</span></label>
-        <input type="text" name="image_url" value="{{ item.image_url if item }}" placeholder="https://..." />
+        <input type="text" name="image_url" value="{{ item.image_url if item }}" />
       </div>
       <div class="form-group">
-        <label>Video URL <span class="hint">(optional)</span></label>
+        <label>Video URL</label>
         <input type="text" name="video_url" value="{{ item.video_url if item }}" />
       </div>
       <div class="form-group">
-        <label>Audio URL <span class="hint">(optional)</span></label>
+        <label>Audio URL</label>
         <input type="text" name="audio_url" value="{{ item.audio_url if item }}" />
       </div>
       <div class="form-group span2">
@@ -40,54 +40,65 @@
         <textarea id="content" name="content" rows="8" required>{{ item.content if item }}</textarea>
       </div>
 
-      {# ── Translations ── #}
-      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
-        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🌐 Translations</label>
+      {# ── Amharic ── #}
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🇪🇹 አማርኛ (Amharic)</label>
+        <button type="button" class="btn btn-sm btn-primary" data-label="🌐 Translate All to Amharic"
+          onclick="translateAll('am')" style="font-size:.75rem">🌐 Translate All to Amharic</button>
       </div>
-
-      {# Amharic #}
       <div class="form-group span2">
-        <label>Title — አማርኛ (Amharic)</label>
+        <label>Title — አማርኛ</label>
         <div class="trans-group">
-          <input type="text" id="title_am" name="title_am" value="{{ item.title_am if item }}" placeholder="Amharic translation..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('title','title_am','am')">🌐 Auto-translate</button>
+          <input type="text" id="title_am" name="title_am" value="{{ item.title_am if item }}" placeholder="Amharic..." />
+          <button type="button" class="trans-btn" data-source="title" data-target="title_am" data-dest="am"
+            onclick="autoTranslate('title','title_am','am')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
         <label>Era — አማርኛ</label>
         <div class="trans-group">
-          <input type="text" id="era_am" name="era_am" value="{{ item.era_am if item }}" placeholder="Amharic translation..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('era','era_am','am')">🌐 Auto-translate</button>
+          <input type="text" id="era_am" name="era_am" value="{{ item.era_am if item }}" placeholder="Amharic..." />
+          <button type="button" class="trans-btn" data-source="era" data-target="era_am" data-dest="am"
+            onclick="autoTranslate('era','era_am','am')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
         <label>Content — አማርኛ</label>
         <div class="trans-group">
-          <textarea id="content_am" name="content_am" rows="6" placeholder="Amharic translation...">{{ item.content_am if item }}</textarea>
-          <button type="button" class="trans-btn" onclick="autoTranslate('content','content_am','am')">🌐 Auto-translate</button>
+          <textarea id="content_am" name="content_am" rows="6" placeholder="Amharic...">{{ item.content_am if item }}</textarea>
+          <button type="button" class="trans-btn" data-source="content" data-target="content_am" data-dest="am"
+            onclick="autoTranslate('content','content_am','am')">🌐</button>
         </div>
       </div>
 
-      {# Oromo #}
+      {# ── Oromo ── #}
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🏛️ Afaan Oromo</label>
+        <button type="button" class="btn btn-sm btn-primary" data-label="🌐 Translate All to Oromo"
+          onclick="translateAll('om')" style="font-size:.75rem">🌐 Translate All to Oromo</button>
+      </div>
       <div class="form-group span2">
-        <label>Title — Afaan Oromo</label>
+        <label>Title — Oromo</label>
         <div class="trans-group">
-          <input type="text" id="title_om" name="title_om" value="{{ item.title_om if item }}" placeholder="Oromo translation..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('title','title_om','om')">🌐 Auto-translate</button>
+          <input type="text" id="title_om" name="title_om" value="{{ item.title_om if item }}" placeholder="Oromo..." />
+          <button type="button" class="trans-btn" data-source="title" data-target="title_om" data-dest="om"
+            onclick="autoTranslate('title','title_om','om')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
-        <label>Era — Afaan Oromo</label>
+        <label>Era — Oromo</label>
         <div class="trans-group">
-          <input type="text" id="era_om" name="era_om" value="{{ item.era_om if item }}" placeholder="Oromo translation..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('era','era_om','om')">🌐 Auto-translate</button>
+          <input type="text" id="era_om" name="era_om" value="{{ item.era_om if item }}" placeholder="Oromo..." />
+          <button type="button" class="trans-btn" data-source="era" data-target="era_om" data-dest="om"
+            onclick="autoTranslate('era','era_om','om')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
-        <label>Content — Afaan Oromo</label>
+        <label>Content — Oromo</label>
         <div class="trans-group">
-          <textarea id="content_om" name="content_om" rows="6" placeholder="Oromo translation...">{{ item.content_om if item }}</textarea>
-          <button type="button" class="trans-btn" onclick="autoTranslate('content','content_om','om')">🌐 Auto-translate</button>
+          <textarea id="content_om" name="content_om" rows="6" placeholder="Oromo...">{{ item.content_om if item }}</textarea>
+          <button type="button" class="trans-btn" data-source="content" data-target="content_om" data-dest="om"
+            onclick="autoTranslate('content','content_om','om')">🌐</button>
         </div>
       </div>
 

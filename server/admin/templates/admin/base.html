@@ -113,10 +113,10 @@
   <script>
     async function autoTranslate(sourceId, targetId, dest) {
       const text = document.getElementById(sourceId)?.value?.trim();
-      if (!text) return;
+      if (!text) { alert('Source field is empty.'); return; }
       const btn = event.currentTarget;
       btn.classList.add('loading');
-      btn.textContent = '⏳ Translating…';
+      btn.innerHTML = '⏳ Translating…';
       try {
         const res = await fetch('/admin/translate', {
           method: 'POST',
@@ -129,12 +129,6 @@
           el.value = data.translated;
           el.style.borderColor = 'var(--success)';
           setTimeout(() => el.style.borderColor = '', 1500);
-        } else if (res.status === 422) {
-          // Language not supported (e.g. Oromo) — highlight field for manual entry
-          const el = document.getElementById(targetId);
-          el.style.borderColor = 'var(--warning)';
-          el.placeholder = '⚠️ ' + data.error;
-          setTimeout(() => el.style.borderColor = '', 3000);
         } else {
           alert('Translation failed: ' + (data.error || 'unknown error'));
         }
@@ -144,6 +138,37 @@
         btn.classList.remove('loading');
         btn.innerHTML = '🌐 Auto-translate';
       }
+    }
+
+    // Translate all fields for a given language at once
+    async function translateAll(dest) {
+      const btn = event.currentTarget;
+      btn.classList.add('loading');
+      btn.innerHTML = '⏳ Translating all…';
+      // Find all trans-btn buttons for this dest and click them sequentially
+      const pairs = [...document.querySelectorAll(`[data-dest="${dest}"]`)];
+      for (const b of pairs) {
+        const sourceId = b.dataset.source;
+        const targetId = b.dataset.target;
+        const text = document.getElementById(sourceId)?.value?.trim();
+        if (!text) continue;
+        try {
+          const res = await fetch('/admin/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, dest })
+          });
+          const data = await res.json();
+          if (data.translated) {
+            const el = document.getElementById(targetId);
+            el.value = data.translated;
+            el.style.borderColor = 'var(--success)';
+            setTimeout(() => el.style.borderColor = '', 1500);
+          }
+        } catch(_) {}
+      }
+      btn.classList.remove('loading');
+      btn.innerHTML = btn.dataset.label;
     }
 
     function showLangTab(groupId, lang) {

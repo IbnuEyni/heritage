@@ -13,7 +13,7 @@
       </div>
       <div class="form-group">
         <label>Title/Role * (English)</label>
-        <input type="text" id="title" name="title" value="{{ item.title if item }}" placeholder="e.g. Garad, Imam, Scholar" required />
+        <input type="text" id="title" name="title" value="{{ item.title if item }}" placeholder="e.g. Garad, Imam" required />
       </div>
       <div class="form-group">
         <label>Era * (English)</label>
@@ -29,11 +29,11 @@
       </div>
       <div class="form-group">
         <label>Birth Year</label>
-        <input type="text" name="birth_year" value="{{ item.birth_year if item }}" placeholder="e.g. 1340" />
+        <input type="text" name="birth_year" value="{{ item.birth_year if item }}" />
       </div>
       <div class="form-group">
         <label>Death Year</label>
-        <input type="text" name="death_year" value="{{ item.death_year if item }}" placeholder="e.g. 1410" />
+        <input type="text" name="death_year" value="{{ item.death_year if item }}" />
       </div>
       <div class="form-group">
         <label>Image Upload</label>
@@ -43,7 +43,7 @@
         {% endif %}
       </div>
       <div class="form-group">
-        <label>Image URL <span class="hint">(optional)</span></label>
+        <label>Image URL</label>
         <input type="text" name="image_url" value="{{ item.image_url if item }}" />
       </div>
       <div class="form-group span2">
@@ -59,62 +59,35 @@
         <textarea id="legacy" name="legacy" rows="4" required>{{ item.legacy if item }}</textarea>
       </div>
       <div class="form-group span2">
-        <label>Bravery Quote <span class="hint">(optional)</span></label>
+        <label>Bravery Quote</label>
         <input type="text" id="bravery_quote" name="bravery_quote" value="{{ item.bravery_quote if item }}" />
       </div>
 
-      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
-        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🌐 Translations</label>
+      {% for lang_code, lang_label, lang_flag in [('am','አማርኛ (Amharic)','🇪🇹'),('om','Afaan Oromo','🏛️')] %}
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">{{ lang_flag }} {{ lang_label }}</label>
+        <button type="button" class="btn btn-sm btn-primary" data-label="🌐 Translate All to {{ lang_label }}"
+          onclick="translateAll('{{ lang_code }}')" style="font-size:.75rem">🌐 Translate All to {{ lang_label }}</button>
       </div>
-
-      {# Amharic #}
-      <div class="form-group span2"><label style="color:var(--muted);font-size:.8rem">— አማርኛ (Amharic) —</label></div>
-      {% for field, label in [('name','Name'),('title','Title'),('era','Era')] %}
-      <div class="form-group">
-        <label>{{ label }} — አማርኛ</label>
+      {% for field, label, multiline in [
+          ('name','Name',false),('title','Title',false),('era','Era',false),
+          ('short_bio','Short Bio',false),('full_story','Full Story',true),
+          ('legacy','Legacy',true),('bravery_quote','Bravery Quote',false)] %}
+      <div class="form-group {{ 'span2' if multiline else '' }}">
+        <label>{{ label }} — {{ lang_label }}</label>
         <div class="trans-group">
-          <input type="text" id="{{ field }}_am" name="{{ field }}_am" value="{{ item[field+'_am'] if item and item[field+'_am'] else '' }}" placeholder="Amharic..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('{{ field }}','{{ field }}_am','am')">🌐</button>
-        </div>
-      </div>
-      {% endfor %}
-      {% for field, label in [('short_bio','Short Bio'),('full_story','Full Story'),('legacy','Legacy'),('bravery_quote','Bravery Quote')] %}
-      <div class="form-group span2">
-        <label>{{ label }} — አማርኛ</label>
-        <div class="trans-group">
-          {% if field in ['full_story','legacy'] %}
-          <textarea id="{{ field }}_am" name="{{ field }}_am" rows="4" placeholder="Amharic...">{{ item[field+'_am'] if item and item[field+'_am'] else '' }}</textarea>
+          {% if multiline %}
+          <textarea id="{{ field }}_{{ lang_code }}" name="{{ field }}_{{ lang_code }}" rows="4"
+            placeholder="{{ lang_label }}...">{{ item[field+'_'+lang_code] if item and item[field+'_'+lang_code] else '' }}</textarea>
           {% else %}
-          <input type="text" id="{{ field }}_am" name="{{ field }}_am" value="{{ item[field+'_am'] if item and item[field+'_am'] else '' }}" placeholder="Amharic..." />
+          <input type="text" id="{{ field }}_{{ lang_code }}" name="{{ field }}_{{ lang_code }}"
+            value="{{ item[field+'_'+lang_code] if item and item[field+'_'+lang_code] else '' }}" placeholder="{{ lang_label }}..." />
           {% endif %}
-          <button type="button" class="trans-btn" onclick="autoTranslate('{{ field }}','{{ field }}_am','am')">🌐 Auto-translate</button>
+          <button type="button" class="trans-btn" data-source="{{ field }}" data-target="{{ field }}_{{ lang_code }}" data-dest="{{ lang_code }}"
+            onclick="autoTranslate('{{ field }}','{{ field }}_{{ lang_code }}','{{ lang_code }}')">🌐</button>
         </div>
       </div>
       {% endfor %}
-
-      {# Oromo #}
-      <div class="form-group span2"><label style="color:var(--muted);font-size:.8rem">— Afaan Oromo —</label></div>
-      {% for field, label in [('name','Name'),('title','Title'),('era','Era')] %}
-      <div class="form-group">
-        <label>{{ label }} — Oromo</label>
-        <div class="trans-group">
-          <input type="text" id="{{ field }}_om" name="{{ field }}_om" value="{{ item[field+'_om'] if item and item[field+'_om'] else '' }}" placeholder="Oromo..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('{{ field }}','{{ field }}_om','om')">🌐</button>
-        </div>
-      </div>
-      {% endfor %}
-      {% for field, label in [('short_bio','Short Bio'),('full_story','Full Story'),('legacy','Legacy'),('bravery_quote','Bravery Quote')] %}
-      <div class="form-group span2">
-        <label>{{ label }} — Oromo</label>
-        <div class="trans-group">
-          {% if field in ['full_story','legacy'] %}
-          <textarea id="{{ field }}_om" name="{{ field }}_om" rows="4" placeholder="Oromo...">{{ item[field+'_om'] if item and item[field+'_om'] else '' }}</textarea>
-          {% else %}
-          <input type="text" id="{{ field }}_om" name="{{ field }}_om" value="{{ item[field+'_om'] if item and item[field+'_om'] else '' }}" placeholder="Oromo..." />
-          {% endif %}
-          <button type="button" class="trans-btn" onclick="autoTranslate('{{ field }}','{{ field }}_om','om')">🌐 Auto-translate</button>
-        </div>
-      </div>
       {% endfor %}
 
     </div>

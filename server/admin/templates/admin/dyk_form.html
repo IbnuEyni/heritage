@@ -18,40 +18,41 @@
       <div class="form-group">
         <label>Accent Color * <span class="hint">(hex)</span></label>
         <input type="text" id="accent_color" name="accent_color"
-          value="{{ item.accent_color if item else '#6B3A2A' }}"
-          placeholder="#6B3A2A"
+          value="{{ item.accent_color if item else '#6B3A2A' }}" placeholder="#6B3A2A"
           oninput="document.getElementById('color_preview').style.background=this.value" />
         <span id="color_preview" class="color-preview"
           style="background:{{ item.accent_color if item else '#6B3A2A' }}"></span>
       </div>
       <div class="form-group">
         <label>Source <span class="hint">(optional)</span></label>
-        <input type="text" id="source" name="source" value="{{ item.source if item }}" placeholder="Historical reference..." />
+        <input type="text" id="source" name="source" value="{{ item.source if item }}" />
       </div>
       <div class="form-group span2">
         <label>Label * (English)</label>
         <input type="text" id="label" name="label" value="{{ item.label if item }}" placeholder="e.g. Coffee Culture" required />
       </div>
       <div class="form-group span2">
-        <label>Fact * (English) <span class="hint">short teaser shown on card</span></label>
+        <label>Fact * (English) <span class="hint">short teaser</span></label>
         <textarea id="fact" name="fact" rows="3" required>{{ item.fact if item }}</textarea>
       </div>
       <div class="form-group span2">
-        <label>Detail * (English) <span class="hint">full body shown on detail page</span></label>
+        <label>Detail * (English) <span class="hint">full body</span></label>
         <textarea id="detail" name="detail" rows="7" required>{{ item.detail if item }}</textarea>
       </div>
 
-      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
-        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">🌐 Translations</label>
+      {% for lang_code, lang_label, lang_flag in [('am','አማርኛ (Amharic)','🇪🇹'),('om','Afaan Oromo','🏛️')] %}
+      <div class="form-group span2" style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+        <label style="font-size:.9rem;color:var(--accent2);font-weight:600">{{ lang_flag }} {{ lang_label }}</label>
+        <button type="button" class="btn btn-sm btn-primary" data-label="🌐 Translate All to {{ lang_label }}"
+          onclick="translateAll('{{ lang_code }}')" style="font-size:.75rem">🌐 Translate All to {{ lang_label }}</button>
       </div>
-
-      {% for lang_code, lang_label in [('am','አማርኛ (Amharic)'),('om','Afaan Oromo')] %}
       <div class="form-group span2">
         <label>Label — {{ lang_label }}</label>
         <div class="trans-group">
           <input type="text" id="label_{{ lang_code }}" name="label_{{ lang_code }}"
             value="{{ item['label_'+lang_code] if item and item['label_'+lang_code] else '' }}" placeholder="{{ lang_label }}..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('label','label_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+          <button type="button" class="trans-btn" data-source="label" data-target="label_{{ lang_code }}" data-dest="{{ lang_code }}"
+            onclick="autoTranslate('label','label_{{ lang_code }}','{{ lang_code }}')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
@@ -59,7 +60,8 @@
         <div class="trans-group">
           <textarea id="fact_{{ lang_code }}" name="fact_{{ lang_code }}" rows="3"
             placeholder="{{ lang_label }}...">{{ item['fact_'+lang_code] if item and item['fact_'+lang_code] else '' }}</textarea>
-          <button type="button" class="trans-btn" onclick="autoTranslate('fact','fact_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+          <button type="button" class="trans-btn" data-source="fact" data-target="fact_{{ lang_code }}" data-dest="{{ lang_code }}"
+            onclick="autoTranslate('fact','fact_{{ lang_code }}','{{ lang_code }}')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
@@ -67,15 +69,17 @@
         <div class="trans-group">
           <textarea id="detail_{{ lang_code }}" name="detail_{{ lang_code }}" rows="6"
             placeholder="{{ lang_label }}...">{{ item['detail_'+lang_code] if item and item['detail_'+lang_code] else '' }}</textarea>
-          <button type="button" class="trans-btn" onclick="autoTranslate('detail','detail_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+          <button type="button" class="trans-btn" data-source="detail" data-target="detail_{{ lang_code }}" data-dest="{{ lang_code }}"
+            onclick="autoTranslate('detail','detail_{{ lang_code }}','{{ lang_code }}')">🌐</button>
         </div>
       </div>
       <div class="form-group span2">
-        <label>Source — {{ lang_label }} <span class="hint">(optional)</span></label>
+        <label>Source — {{ lang_label }}</label>
         <div class="trans-group">
           <input type="text" id="source_{{ lang_code }}" name="source_{{ lang_code }}"
             value="{{ item['source_'+lang_code] if item and item['source_'+lang_code] else '' }}" placeholder="{{ lang_label }}..." />
-          <button type="button" class="trans-btn" onclick="autoTranslate('source','source_{{ lang_code }}','{{ lang_code }}')">🌐 Auto-translate</button>
+          <button type="button" class="trans-btn" data-source="source" data-target="source_{{ lang_code }}" data-dest="{{ lang_code }}"
+            onclick="autoTranslate('source','source_{{ lang_code }}','{{ lang_code }}')">🌐</button>
         </div>
       </div>
       {% endfor %}
