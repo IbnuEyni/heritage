@@ -24,16 +24,14 @@ _translator = Translator()
 
 def _mymemory_translate(text, src='en', dest='om-ET'):
     """MyMemory free API — supports Oromo (om-ET).
-    Splits text into <=500 char chunks on sentence boundaries to stay
-    within the free tier limit, then joins the results.
+    Splits text into <=490 char chunks, with retry + backoff on 429.
     """
-    # Split into sentences (split on . ! ? followed by space or newline)
     import re
-    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+    import time
 
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
     chunks, current = [], ''
     for sentence in sentences:
-        # If a single sentence exceeds 500 chars, hard-split it
         if len(sentence) > 490:
             for i in range(0, len(sentence), 490):
                 chunks.append(sentence[i:i+490])
@@ -47,13 +45,28 @@ def _mymemory_translate(text, src='en', dest='om-ET'):
         chunks.append(current.strip())
 
     translated_parts = []
-    for chunk in chunks:
+    for i, chunk in enumerate(chunks):
+        if i > 0:
+            time.sleep(1.2)  # stay under free tier rate limit
         url = (
             'https://api.mymemory.translated.net/get'
             f'?q={urllib.parse.quote(chunk)}&langpair={src}|{dest}'
         )
-        with urllib.request.urlopen(url, timeout=12) as r:
-            data = json.loads(r.read())
+        # Add registered email if set — raises daily limit from 10k to 50k chars
+        mymemory_email = os.environ.get('MYMEMORY_EMAIL', '')
+        if mymemory_email:
+            url += f'&de={urllib.parse.quote(mymemory_email)}'
+        # Retry up to 3 times with exponential backoff on 429
+        for attempt in range(3):
+            try:
+                with urllib.request.urlopen(url, timeout=15) as r:
+                    data = json.loads(r.read())
+                break
+            except urllib.error.HTTPError as e:
+                if e.code == 429 and attempt < 2:
+                    time.sleep(3 * (attempt + 1))
+                else:
+                    raise
         if data.get('responseStatus') != 200:
             raise RuntimeError(data.get('responseDetails', 'MyMemory error'))
         translated_parts.append(data['responseData']['translatedText'])
