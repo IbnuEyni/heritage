@@ -5,6 +5,7 @@ import '../../core/errors/failures.dart';
 import '../datasources/isar_service.dart';
 import '../isar/notification_item.dart';
 import '../repositories/repository_impl.dart';
+import '../../main.dart';
 
 // ── Services ──────────────────────────────────────────────────────────────────
 final isarServiceProvider = Provider<IsarService>((ref) => IsarService());
@@ -44,10 +45,11 @@ final getWordOfTheDayUseCaseProvider = Provider(
 // ── State ─────────────────────────────────────────────────────────────────────
 typedef AsyncResult<T> = ({T? data, Failure? failure, bool isLoading});
 
-// Heritage
+// Heritage — re-fetches when locale changes
 final heritageProvider =
     FutureProvider<({List<HeritageEntity>? data, Failure? failure})>(
         (ref) async {
+  ref.watch(localeProvider); // invalidate on locale change
   final result = await ref.read(getHeritageUseCaseProvider)();
   return result;
 });
@@ -58,6 +60,7 @@ final searchQueryProvider = StateProvider<String>((ref) => '');
 final dictionaryProvider =
     FutureProvider<({List<DictionaryEntity>? data, Failure? failure})>(
         (ref) async {
+  ref.watch(localeProvider);
   final query = ref.watch(searchQueryProvider);
   if (query.isEmpty) {
     return ref.read(getDictionaryUseCaseProvider)();
@@ -71,6 +74,7 @@ final newsPageProvider = StateProvider<int>((ref) => 1);
 final newsProvider =
     FutureProvider<({PaginatedResult<NewsEntity>? data, Failure? failure})>(
         (ref) async {
+  ref.watch(localeProvider);
   final page = ref.watch(newsPageProvider);
   return ref.read(getNewsUseCaseProvider)(page: page);
 });
@@ -84,18 +88,21 @@ final eventsProvider =
 // Heroes
 final heroesProvider =
     FutureProvider<({List<HeroEntity>? data, Failure? failure})>((ref) async {
+  ref.watch(localeProvider);
   return ref.read(heroesRepoProvider).getHeroes();
 });
 
 // Word of the Day
 final wordOfTheDayProvider =
     FutureProvider<({DictionaryEntity? data, Failure? failure})>((ref) async {
+  ref.watch(localeProvider);
   return ref.read(getWordOfTheDayUseCaseProvider)();
 });
 
 // Did You Know
 final didYouKnowProvider =
     FutureProvider<({List<DidYouKnowEntity>? data, Failure? failure})>((ref) async {
+  ref.watch(localeProvider);
   return ref.read(didYouKnowRepoProvider).getDidYouKnow();
 });
 

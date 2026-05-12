@@ -1,4 +1,5 @@
 import os
+import socket
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
@@ -11,13 +12,21 @@ heritage_bp = Blueprint('heritage_v1', __name__)
 
 ALLOWED = {'png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'tiff', 'heic'}
 
+
 def _allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED
+
+
+def _lang():
+    return request.args.get('lang', 'en')
+
 
 @heritage_bp.get('/')
 @limiter.limit('60/minute')
 def get_heritage():
-    return jsonify([h.to_dict() for h in Heritage.query.order_by(Heritage.era).all()])
+    lang = _lang()
+    return jsonify([h.to_dict(lang) for h in Heritage.query.order_by(Heritage.era).all()])
+
 
 @heritage_bp.post('/')
 @jwt_required()
@@ -32,6 +41,7 @@ def create_heritage():
     db.session.commit()
     return jsonify(article.to_dict()), 201
 
+
 @heritage_bp.put('/<int:id>')
 @jwt_required()
 def update_heritage(id):
@@ -44,6 +54,7 @@ def update_heritage(id):
         setattr(article, k, v)
     db.session.commit()
     return jsonify(article.to_dict())
+
 
 @heritage_bp.delete('/<int:id>')
 @jwt_required()
@@ -67,16 +78,11 @@ def upload_image(id):
     upload_dir = os.path.join(current_app.root_path, 'uploads', 'heritage')
     os.makedirs(upload_dir, exist_ok=True)
 
-    filename  = f"{id}_{secure_filename(file.filename)}"
-    filepath  = os.path.join(upload_dir, filename)
-    file.save(filepath)
+    filename = f"{id}_{secure_filename(file.filename)}"
+    file.save(os.path.join(upload_dir, filename))
 
-    # Build a publicly accessible URL using LAN IP, not localhost
-    host      = request.host_url.rstrip('/')
-    # Replace 127.0.0.1 or localhost with the actual network interface IP
-    import socket
     lan_ip = socket.gethostbyname(socket.gethostname())
-    host   = host.replace('localhost', lan_ip).replace('127.0.0.1', lan_ip)
+    host = request.host_url.rstrip('/').replace('localhost', lan_ip).replace('127.0.0.1', lan_ip)
     image_url = f"{host}/uploads/heritage/{filename}"
 
     article.image_url = image_url

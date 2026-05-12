@@ -18,33 +18,32 @@ class ApiClient {
     return dio;
   }
 
-  // News with pagination
-  static Future<PaginatedNewsModel> fetchNews({int page = 1}) async {
+  static Future<PaginatedNewsModel> fetchNews({int page = 1, String lang = 'en'}) async {
     final res = await _dio.get('/v1/news/', queryParameters: {
       'page': page,
       'per_page': AppConstants.pageSize,
+      'lang': lang,
     });
     return PaginatedNewsModel.fromJson(res.data);
   }
 
-  // Heritage
-  static Future<List<HeritageModel>> fetchHeritage() async {
-    final res = await _dio.get('/v1/heritage/');
+  static Future<List<HeritageModel>> fetchHeritage({String lang = 'en'}) async {
+    final res = await _dio.get('/v1/heritage/', queryParameters: {'lang': lang});
     return (res.data as List).map((e) => HeritageModel.fromJson(e)).toList();
   }
 
-  // Dictionary
-  static Future<List<DictionaryModel>> fetchDictionary() async {
-    final res = await _dio.get('/v1/dictionary/');
+  static Future<List<DictionaryModel>> fetchDictionary({String lang = 'en'}) async {
+    final res = await _dio.get('/v1/dictionary/', queryParameters: {'lang': lang});
     return (res.data as List).map((e) => DictionaryModel.fromJson(e)).toList();
   }
 
-  // Delta sync — only records changed since last sync
-  static Future<Map<String, dynamic>> fetchSync(DateTime? since) async {
-    final res = await _dio.get('/v1/sync/', queryParameters:
-      since != null ? {'since': since.toIso8601String()} : null);
+  static Future<Map<String, dynamic>> fetchSync(DateTime? since, {String lang = 'en'}) async {
+    final params = <String, dynamic>{'lang': lang};
+    if (since != null) params['since'] = since.toIso8601String();
+    final res = await _dio.get('/v1/sync/', queryParameters: params);
     return res.data as Map<String, dynamic>;
   }
+
   static Future<String> login(String username, String password) async {
     final res = await _dio.post('/v1/auth/login', data: {
       'username': username,
@@ -53,13 +52,13 @@ class ApiClient {
     return res.data['token'];
   }
 
-  static Future<List<HeroModel>> fetchHeroes() async {
-    final res = await _dio.get('/v1/heroes/');
+  static Future<List<HeroModel>> fetchHeroes({String lang = 'en'}) async {
+    final res = await _dio.get('/v1/heroes/', queryParameters: {'lang': lang});
     return (res.data as List).map((e) => HeroModel.fromJson(e)).toList();
   }
 
-  static Future<List<DidYouKnowModel>> fetchDidYouKnow() async {
-    final res = await _dio.get('/v1/did-you-know/');
+  static Future<List<DidYouKnowModel>> fetchDidYouKnow({String lang = 'en'}) async {
+    final res = await _dio.get('/v1/did-you-know/', queryParameters: {'lang': lang});
     return (res.data as List).map((e) => DidYouKnowModel.fromJson(e)).toList();
   }
 }

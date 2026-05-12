@@ -7,10 +7,17 @@ from core.schemas import dyk_schema
 
 dyk_bp = Blueprint('dyk_v1', __name__)
 
+
+def _lang():
+    return request.args.get('lang', 'en')
+
+
 @dyk_bp.get('/')
 @limiter.limit('60/minute')
 def get_dyk():
-    return jsonify([d.to_dict() for d in DidYouKnow.query.order_by(DidYouKnow.id).all()])
+    lang = _lang()
+    return jsonify([d.to_dict(lang) for d in DidYouKnow.query.order_by(DidYouKnow.id).all()])
+
 
 @dyk_bp.post('/')
 @jwt_required()
@@ -25,6 +32,7 @@ def create_dyk():
     db.session.commit()
     return jsonify(entry.to_dict()), 201
 
+
 @dyk_bp.put('/<int:id>')
 @jwt_required()
 def update_dyk(id):
@@ -37,6 +45,7 @@ def update_dyk(id):
         setattr(entry, k, v)
     db.session.commit()
     return jsonify(entry.to_dict())
+
 
 @dyk_bp.delete('/<int:id>')
 @jwt_required()

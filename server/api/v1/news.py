@@ -8,9 +8,15 @@ from services.fcm_service import send_news_notification
 
 news_bp = Blueprint('news_v1', __name__)
 
+
+def _lang():
+    return request.args.get('lang', 'en')
+
+
 @news_bp.get('/')
 @limiter.limit('60/minute')
 def get_news():
+    lang     = _lang()
     page     = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
     category = request.args.get('category')
@@ -21,11 +27,12 @@ def get_news():
 
     paginated = query.paginate(page=page, per_page=per_page, error_out=False)
     return jsonify({
-        'items':  [n.to_dict() for n in paginated.items],
-        'total':  paginated.total,
-        'pages':  paginated.pages,
-        'page':   page,
+        'items': [n.to_dict(lang) for n in paginated.items],
+        'total': paginated.total,
+        'pages': paginated.pages,
+        'page':  page,
     })
+
 
 @news_bp.post('/')
 @jwt_required()
@@ -41,6 +48,7 @@ def create_news():
     send_news_notification(article)
     return jsonify(article.to_dict()), 201
 
+
 @news_bp.put('/<int:id>')
 @jwt_required()
 def update_news(id):
@@ -53,6 +61,7 @@ def update_news(id):
         setattr(article, k, v)
     db.session.commit()
     return jsonify(article.to_dict())
+
 
 @news_bp.delete('/<int:id>')
 @jwt_required()
