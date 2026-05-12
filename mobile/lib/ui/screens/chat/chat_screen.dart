@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import 'kebena_knowledge.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -139,10 +140,10 @@ class _ChatScreenState extends State<ChatScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Kebena Assistant',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                Text(AppLocalizations.of(context)!.kebenaAssistant,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                 Text(
-                  'Ask anything about Kebena',
+                  AppLocalizations.of(context)!.askAnythingKebena,
                   style: TextStyle(
                     fontSize: 11,
                     color: isDark
@@ -245,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         fontSize: 14,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Ask about Kebena…',
+                        hintText: AppLocalizations.of(context)!.askAboutKebena,
                         hintStyle: TextStyle(
                           color: isDark
                               ? AppColors.darkTextMuted

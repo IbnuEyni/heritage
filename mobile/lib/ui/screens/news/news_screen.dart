@@ -31,7 +31,7 @@ class NewsScreen extends ConsumerWidget {
           ),
           data: (result) {
             if (result.failure != null) {
-              return Center(child: Text('Error: ${result.failure!.message}'));
+              return Center(child: Text(AppLocalizations.of(context)!.error(result.failure!.message)));
             }
             final items = result.data?.items ?? [];
             if (items.isEmpty) {

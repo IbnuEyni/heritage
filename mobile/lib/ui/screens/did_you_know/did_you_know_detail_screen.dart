@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../domain/entities/entities.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DidYouKnowDetailScreen extends StatelessWidget {
   final DidYouKnowEntity item;
@@ -138,7 +139,7 @@ class DidYouKnowDetailScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text('The Full Story', style: tt.titleMedium),
+                                Text(AppLocalizations.of(context)!.theFullStory, style: tt.titleMedium),
                   ]),
 
                   const SizedBox(height: 12),
@@ -172,7 +173,7 @@ class DidYouKnowDetailScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Source',
+                                Text(AppLocalizations.of(context)!.source,
                                     style: tt.labelSmall
                                         ?.copyWith(color: AppColors.gold)),
                                 const SizedBox(height: 4),

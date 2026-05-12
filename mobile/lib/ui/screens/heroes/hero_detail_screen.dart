@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../domain/entities/entities.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HeroDetailScreen extends StatelessWidget {
   final HeroEntity hero;
@@ -175,7 +176,7 @@ class HeroDetailScreen extends StatelessWidget {
                   ],
 
                   // full story
-                  _SectionLabel('The Story', accent),
+                  _SectionLabel(AppLocalizations.of(context)!.theStory, accent),
                   const SizedBox(height: 10),
                   Text(
                     hero.fullStory,
@@ -185,7 +186,7 @@ class HeroDetailScreen extends StatelessWidget {
                   const SizedBox(height: 28),
 
                   // legacy
-                  _SectionLabel('Legacy for This Generation', accent),
+                  _SectionLabel(AppLocalizations.of(context)!.legacySection, accent),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(16),

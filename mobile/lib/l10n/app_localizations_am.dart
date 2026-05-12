@@ -275,4 +275,49 @@ class AppLocalizationsAm extends AppLocalizations {
   String error(String message) {
     return 'ስህተት: $message';
   }
+
+  @override
+  String get communityEvents => 'የማህበረሰብ ዝግጅቶች';
+
+  @override
+  String get addToCalendar => 'ወደ ቀን መቁጠሪያ ጨምር';
+
+  @override
+  String get markAllRead => 'ሁሉንም እንደተነበበ ምልክት አድርግ';
+
+  @override
+  String get clearAll => 'ሁሉንም አጽዳ';
+
+  @override
+  String get clearAllNotifications => 'ሁሉም ማሳወቂያዎች ይጸዱ?';
+
+  @override
+  String get cannotBeUndone => 'ይህ ሊቀለበስ አይችልም።';
+
+  @override
+  String get noNotificationsYet => 'እስካሁን ምንም ማሳወቂያ የለም';
+
+  @override
+  String get notificationsSubtitle => 'ከቀበና ወረዳ ዝማኔዎችን እዚህ ያያሉ';
+
+  @override
+  String get theFullStory => 'ሙሉ ታሪኩ';
+
+  @override
+  String get source => 'ምንጭ';
+
+  @override
+  String get theStory => 'ታሪኩ';
+
+  @override
+  String get legacySection => 'ለዚህ ትውልድ ቅርስ';
+
+  @override
+  String get kebenaAssistant => 'የቀበና ረዳት';
+
+  @override
+  String get askAnythingKebena => 'ስለ ቀበና ማንኛውንም ጠይቅ';
+
+  @override
+  String get askAboutKebena => 'ስለ ቀበና ጠይቅ…';
 }

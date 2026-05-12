@@ -275,5 +275,53 @@
   "@error": {
     "description": "Generic error message",
     "placeholders": { "message": { "type": "String" } }
-  }
+  },
+
+  "communityEvents": "Community Events",
+  "@communityEvents": { "description": "Events screen title" },
+
+  "addToCalendar": "Add to Calendar",
+  "@addToCalendar": { "description": "Add to calendar button" },
+
+  "notifications": "Notifications",
+  "@notifications": { "description": "Notifications screen title" },
+
+  "markAllRead": "Mark all read",
+  "@markAllRead": { "description": "Mark all notifications read" },
+
+  "clearAll": "Clear all",
+  "@clearAll": { "description": "Clear all tooltip" },
+
+  "clearAllNotifications": "Clear all notifications?",
+  "@clearAllNotifications": { "description": "Clear notifications dialog title" },
+
+  "cannotBeUndone": "This cannot be undone.",
+  "@cannotBeUndone": { "description": "Clear notifications dialog body" },
+
+  "noNotificationsYet": "No notifications yet",
+  "@noNotificationsYet": { "description": "Notifications empty state title" },
+
+  "notificationsSubtitle": "You'll see updates from Kebena Woreda here",
+  "@notificationsSubtitle": { "description": "Notifications empty state subtitle" },
+
+  "theFullStory": "The Full Story",
+  "@theFullStory": { "description": "Did you know detail section header" },
+
+  "source": "Source",
+  "@source": { "description": "Source label" },
+
+  "theStory": "The Story",
+  "@theStory": { "description": "Hero detail story section" },
+
+  "legacySection": "Legacy for This Generation",
+  "@legacySection": { "description": "Hero detail legacy section" },
+
+  "kebenaAssistant": "Kebena Assistant",
+  "@kebenaAssistant": { "description": "Chat screen title" },
+
+  "askAnythingKebena": "Ask anything about Kebena",
+  "@askAnythingKebena": { "description": "Chat screen subtitle" },
+
+  "askAboutKebena": "Ask about Kebena…",
+  "@askAboutKebena": { "description": "Chat input hint" }
 }

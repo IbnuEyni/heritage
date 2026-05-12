@@ -2,6 +2,7 @@ import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 
 final _mockEvents = [
   _EventData(
@@ -27,8 +28,9 @@ class EventsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Community Events')),
+      appBar: AppBar(title: Text(l.communityEvents)),
       body: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         itemCount: _mockEvents.length,
@@ -45,6 +47,7 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final tt = Theme.of(context).textTheme;
     final cardColor = isDark ? AppColors.darkCard : AppColors.lightCard;
@@ -59,13 +62,11 @@ class _EventCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Colored top bar ──────────────────────────────────
           Container(
             height: 5,
             decoration: BoxDecoration(
               color: event.color,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
             ),
           ),
           Padding(
@@ -73,42 +74,27 @@ class _EventCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // date badge
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: event.color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(7),
-                    border: Border.all(
-                        color: event.color.withValues(alpha: 0.25)),
+                    border: Border.all(color: event.color.withValues(alpha: 0.25)),
                   ),
                   child: Text(
                     DateFormat('EEE, MMM d · y').format(event.start),
-                    style: TextStyle(
-                      color: event.color,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(color: event.color, fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                 ),
                 const SizedBox(height: 12),
                 Text(event.title, style: tt.titleLarge),
                 const SizedBox(height: 8),
-                Text(
-                  event.description,
-                  style: tt.bodyMedium,
-                ),
+                Text(event.description, style: tt.bodyMedium),
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      size: 15,
-                      color: isDark
-                          ? AppColors.darkTextMuted
-                          : AppColors.lightTextMuted,
-                    ),
+                    Icon(Icons.location_on_outlined, size: 15,
+                        color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted),
                     const SizedBox(width: 5),
                     Text(event.location, style: tt.bodySmall),
                   ],
@@ -122,7 +108,7 @@ class _EventCard extends StatelessWidget {
                       foregroundColor: Colors.white,
                     ),
                     icon: const Icon(Icons.calendar_today_outlined, size: 16),
-                    label: const Text('Add to Calendar'),
+                    label: Text(l.addToCalendar),
                     onPressed: () => Add2Calendar.addEvent2Cal(Event(
                       title: event.title,
                       description: event.description,

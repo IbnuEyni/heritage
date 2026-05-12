@@ -49,10 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 148,
                 height: 148,
                 child: CustomPaint(painter: _EmblemPainter()),
-              )
-                  .animate()
-                  .fadeIn(duration: 800.ms, curve: Curves.easeOut)
-                  .scale(
+              ).animate().fadeIn(duration: 800.ms, curve: Curves.easeOut).scale(
                     begin: const Offset(0.65, 0.65),
                     duration: 900.ms,
                     curve: Curves.easeOutBack,
@@ -108,9 +105,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   fontStyle: FontStyle.italic,
                   letterSpacing: 1.5,
                 ),
-              )
-                  .animate(delay: 1050.ms)
-                  .fadeIn(duration: 600.ms),
+              ).animate(delay: 1050.ms).fadeIn(duration: 600.ms),
             ],
           ),
         ),
@@ -157,7 +152,8 @@ class _OrnamentDivider extends StatelessWidget {
           width: 5,
           height: 5,
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.gold.withValues(alpha: 0.7), width: 1),
+            border: Border.all(
+                color: AppColors.gold.withValues(alpha: 0.7), width: 1),
           ),
         ),
       );
@@ -194,27 +190,32 @@ class _EmblemPainter extends CustomPainter {
     );
 
     // 2. Outer thin ring
-    _strokeCircle(canvas, cx, cy, r - 1.5, AppColors.gold.withValues(alpha: 0.35), 1.0);
+    _strokeCircle(
+        canvas, cx, cy, r - 1.5, AppColors.gold.withValues(alpha: 0.35), 1.0);
 
     // 3. Dashed decorative ring
-    _dashedCircle(canvas, cx, cy, r * 0.88, AppColors.gold.withValues(alpha: 0.5), 1.0, 32);
+    _dashedCircle(canvas, cx, cy, r * 0.88,
+        AppColors.gold.withValues(alpha: 0.5), 1.0, 32);
 
     // 4. Gradient filled disc
     canvas.drawCircle(
       Offset(cx, cy),
       r * 0.76,
       Paint()
-        ..shader = RadialGradient(
-          colors: const [Color(0xFF3A7D5E), Color(0xFF1B4332)],
-          stops: const [0.0, 1.0],
-        ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.76)),
+        ..shader = const RadialGradient(
+          colors: [Color(0xFF3A7D5E), Color(0xFF1B4332)],
+          stops: [0.0, 1.0],
+        ).createShader(
+            Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.76)),
     );
 
     // 5. Inner ring
-    _strokeCircle(canvas, cx, cy, r * 0.76, AppColors.gold.withValues(alpha: 0.6), 1.2);
+    _strokeCircle(
+        canvas, cx, cy, r * 0.76, AppColors.gold.withValues(alpha: 0.6), 1.2);
 
     // 6. Innermost thin ring
-    _strokeCircle(canvas, cx, cy, r * 0.60, AppColors.gold.withValues(alpha: 0.25), 0.8);
+    _strokeCircle(
+        canvas, cx, cy, r * 0.60, AppColors.gold.withValues(alpha: 0.25), 0.8);
 
     // 7. 8-pointed Islamic geometric star (outlined + filled)
     _drawStar(canvas, cx, cy, r * 0.48, r * 0.20, 8,
@@ -301,7 +302,11 @@ class _EmblemPainter extends CustomPainter {
     }
     path.close();
 
-    canvas.drawPath(path, Paint()..color = fill..style = PaintingStyle.fill);
+    canvas.drawPath(
+        path,
+        Paint()
+          ..color = fill
+          ..style = PaintingStyle.fill);
     canvas.drawPath(
       path,
       Paint()

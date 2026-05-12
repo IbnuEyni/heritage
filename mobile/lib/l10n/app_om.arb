@@ -85,5 +85,22 @@
   "termsOfUseSubtitle": "Qajeelfama fayyadamaa",
   "appFooter": "Appii Dhaalaa Kebena v1.0.0\nJaalalaaan hawaasa Kebenaaf hojjetame ❤️",
   "retry": "Irra Deebi'i Yaalii",
-  "error": "Dogoggora: {message}"
+  "error": "Dogoggora: {message}",
+
+  "communityEvents": "Ayyaanaalee Hawaasaa",
+  "addToCalendar": "Kaalaandarii Irratti Ida'i",
+  "notifications": "Beeksisaalee",
+  "markAllRead": "Hunda Dubbifame Godhi",
+  "clearAll": "Hunda Haqi",
+  "clearAllNotifications": "Beeksisaalee hunda haqi?",
+  "cannotBeUndone": "Kun deebi'ee hojii irra ooluu hin danda'u.",
+  "noNotificationsYet": "Ammaaf beeksisa hin jiru",
+  "notificationsSubtitle": "Haaromsa Aanaa Kebena irraa asitti argita",
+  "theFullStory": "Seenaa Guutuu",
+  "source": "Madda",
+  "theStory": "Seenaa",
+  "legacySection": "Dhaalaa Dhalootaaf",
+  "kebenaAssistant": "Gargaaraa Kebena",
+  "askAnythingKebena": "Waa'ee Kebena waa'ee kamiyyuu gaafadhu",
+  "askAboutKebena": "Waa'ee Kebena gaafadhu…"
 }

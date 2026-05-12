@@ -283,4 +283,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String error(String message) {
     return 'Error: $message';
   }
+
+  @override
+  String get communityEvents => 'Community Events';
+
+  @override
+  String get addToCalendar => 'Add to Calendar';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get clearAll => 'Clear all';
+
+  @override
+  String get clearAllNotifications => 'Clear all notifications?';
+
+  @override
+  String get cannotBeUndone => 'This cannot be undone.';
+
+  @override
+  String get noNotificationsYet => 'No notifications yet';
+
+  @override
+  String get notificationsSubtitle =>
+      'You\'ll see updates from Kebena Woreda here';
+
+  @override
+  String get theFullStory => 'The Full Story';
+
+  @override
+  String get source => 'Source';
+
+  @override
+  String get theStory => 'The Story';
+
+  @override
+  String get legacySection => 'Legacy for This Generation';
+
+  @override
+  String get kebenaAssistant => 'Kebena Assistant';
+
+  @override
+  String get askAnythingKebena => 'Ask anything about Kebena';
+
+  @override
+  String get askAboutKebena => 'Ask about Kebena…';
 }

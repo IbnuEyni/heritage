@@ -84,7 +84,7 @@ class DictionaryScreen extends ConsumerWidget {
           data: (result) {
             if (result.failure != null) {
               return Center(
-                child: Text('Error: ${result.failure!.message}',
+                child: Text(AppLocalizations.of(context)!.error(result.failure!.message),
                     style: TextStyle(color: scheme.error)),
               );
             }

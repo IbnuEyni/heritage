@@ -4,50 +4,46 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../data/isar/notification_item.dart';
 import '../../../data/repositories/providers.dart';
+import '../../../l10n/app_localizations.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context)!;
     final notifications = ref.watch(notificationProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final tt = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBg : AppColors.lightBg,
+      backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(l.notifications),
         actions: [
           if (notifications.isNotEmpty)
             TextButton(
-              onPressed: () =>
-                  ref.read(notificationProvider.notifier).markAllRead(),
-              child: const Text(
-                'Mark all read',
-                style: TextStyle(color: AppColors.primary, fontSize: 13),
-              ),
+              onPressed: () => ref.read(notificationProvider.notifier).markAllRead(),
+              child: Text(l.markAllRead,
+                  style: const TextStyle(color: AppColors.primary, fontSize: 13)),
             ),
           if (notifications.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete_sweep_outlined),
-              tooltip: 'Clear all',
-              onPressed: () => _confirmClear(context, ref),
+              tooltip: l.clearAll,
+              onPressed: () => _confirmClear(context, ref, l),
             ),
         ],
       ),
       body: notifications.isEmpty
-          ? _EmptyState(tt: tt)
+          ? _EmptyState(tt: tt, l: l)
           : ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: notifications.length,
               separatorBuilder: (_, __) => const Divider(height: 1, indent: 72),
               itemBuilder: (_, i) => _NotificationTile(
                 item: notifications[i],
-                onDismiss: () => ref
-                    .read(notificationProvider.notifier)
-                    .delete(notifications[i].id),
+                onDismiss: () => ref.read(notificationProvider.notifier).delete(notifications[i].id),
                 onTap: () {
                   if (!notifications[i].isRead) {
                     ref.read(notificationProvider.notifier).markAllRead();
@@ -58,23 +54,23 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 
-  void _confirmClear(BuildContext context, WidgetRef ref) {
+  void _confirmClear(BuildContext context, WidgetRef ref, AppLocalizations l) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Clear all notifications?'),
-        content: const Text('This cannot be undone.'),
+        title: Text(l.clearAllNotifications),
+        content: Text(l.cannotBeUndone),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l.cancel),
           ),
           TextButton(
             onPressed: () {
               ref.read(notificationProvider.notifier).clearAll();
               Navigator.pop(context);
             },
-            child: const Text('Clear', style: TextStyle(color: Colors.red)),
+            child: Text(l.clear, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -101,7 +97,7 @@ class _NotificationTile extends StatelessWidget {
     };
   }
 
-  String _formatTime(DateTime dt) {
+  String _formatTime(DateTime dt, AppLocalizations l) {
     final now = DateTime.now();
     final diff = now.difference(dt);
     if (diff.inMinutes < 1) return 'Just now';
@@ -113,6 +109,7 @@ class _NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final tt = Theme.of(context).textTheme;
     final unreadBg = isDark
@@ -137,26 +134,17 @@ class _NotificationTile extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Icon circle
               Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkCard
-                      : AppColors.lightCard,
+                  color: isDark ? AppColors.darkCard : AppColors.lightCard,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isDark
-                        ? AppColors.darkBorder
-                        : AppColors.lightBorder,
-                  ),
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 ),
                 child: Center(
-                  child: Text(
-                    _topicIcon(item.topic),
-                    style: const TextStyle(fontSize: 20),
-                  ),
+                  child: Text(_topicIcon(item.topic), style: const TextStyle(fontSize: 20)),
                 ),
               ),
               const SizedBox(width: 12),
@@ -170,37 +158,23 @@ class _NotificationTile extends StatelessWidget {
                           child: Text(
                             item.title,
                             style: tt.titleSmall?.copyWith(
-                              fontWeight: item.isRead
-                                  ? FontWeight.w500
-                                  : FontWeight.w700,
+                              fontWeight: item.isRead ? FontWeight.w500 : FontWeight.w700,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          _formatTime(item.receivedAt),
-                          style: tt.bodySmall,
-                        ),
+                        Text(_formatTime(item.receivedAt, l), style: tt.bodySmall),
                       ],
                     ),
                     const SizedBox(height: 3),
-                    Text(
-                      item.body,
-                      style: tt.bodyMedium,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(item.body, style: tt.bodyMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
                     if (!item.isRead) ...[
                       const SizedBox(height: 6),
                       Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
-                          shape: BoxShape.circle,
-                        ),
+                        width: 8, height: 8,
+                        decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                       ),
                     ],
                   ],
@@ -216,7 +190,8 @@ class _NotificationTile extends StatelessWidget {
 
 class _EmptyState extends StatelessWidget {
   final TextTheme tt;
-  const _EmptyState({required this.tt});
+  final AppLocalizations l;
+  const _EmptyState({required this.tt, required this.l});
 
   @override
   Widget build(BuildContext context) {
@@ -224,19 +199,12 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.notifications_none_rounded,
-            size: 64,
-            color: AppColors.primary.withValues(alpha: 0.3),
-          ),
+          Icon(Icons.notifications_none_rounded, size: 64,
+              color: AppColors.primary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
-          Text('No notifications yet', style: tt.titleMedium),
+          Text(l.noNotificationsYet, style: tt.titleMedium),
           const SizedBox(height: 6),
-          Text(
-            'You\'ll see updates from Kebena Woreda here',
-            style: tt.bodySmall,
-            textAlign: TextAlign.center,
-          ),
+          Text(l.notificationsSubtitle, style: tt.bodySmall, textAlign: TextAlign.center),
         ],
       ),
     );

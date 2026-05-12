@@ -16,17 +16,21 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final unreadCount = ref.watch(
-      notificationProvider.select((list) => list.where((n) => !n.isRead).length),
+      notificationProvider
+          .select((list) => list.where((n) => !n.isRead).length),
     );
     return Scaffold(
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.viewPaddingOf(context).bottom + 80),
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.viewPaddingOf(context).bottom + 80),
         child: FloatingActionButton.extended(
           onPressed: () => context.push('/chat'),
           backgroundColor: AppColors.primary,
-          icon: const Icon(Icons.chat_bubble_rounded, color: Colors.white, size: 20),
+          icon: const Icon(Icons.chat_bubble_rounded,
+              color: Colors.white, size: 20),
           label: Text(AppLocalizations.of(context)!.askKebenaAI,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w600)),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -38,59 +42,59 @@ class HomeScreen extends ConsumerWidget {
           ref.invalidate(wordOfTheDayProvider);
         },
         child: CustomScrollView(
-        slivers: [
-          // ── Hero Banner ───────────────────────────────────────
-          SliverAppBar(
-            expandedHeight: 300,
-            pinned: true,
-            stretch: true,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            scrolledUnderElevation: 0,
-            flexibleSpace: _AppBarFlexible(
-              onSettings: () => context.push('/settings'),
-              onNotifications: () => context.push('/notifications'),
-              unreadCount: unreadCount,
+          slivers: [
+            // ── Hero Banner ───────────────────────────────────────
+            SliverAppBar(
+              expandedHeight: 300,
+              pinned: true,
+              stretch: true,
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              scrolledUnderElevation: 0,
+              flexibleSpace: _AppBarFlexible(
+                onSettings: () => context.push('/settings'),
+                onNotifications: () => context.push('/notifications'),
+                unreadCount: unreadCount,
+              ),
             ),
-          ),
 
-          // ── Did You Know ──────────────────────────────────────
-          SliverToBoxAdapter(
-            child: const _DidYouKnowSection()
-                .animate()
-                .fadeIn(delay: 100.ms, duration: 400.ms),
-          ),
-
-          // ── Kebena Heroes ─────────────────────────────────────
-          SliverToBoxAdapter(
-            child: const _HeroesPreviewSection()
-                .animate()
-                .fadeIn(delay: 200.ms, duration: 400.ms),
-          ),
-
-          // ── Latest News ───────────────────────────────────────
-          SliverToBoxAdapter(
-            child: const _LatestNewsSection()
-                .animate()
-                .fadeIn(delay: 300.ms, duration: 400.ms),
-          ),
-
-          // ── Quick Facts ───────────────────────────────────────
-          SliverToBoxAdapter(
-            child: const _QuickFactsBanner()
-                .animate()
-                .fadeIn(delay: 400.ms, duration: 400.ms),
-          ),
-
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: MediaQuery.viewPaddingOf(context).bottom + 80 + 24,
+            // ── Did You Know ──────────────────────────────────────
+            SliverToBoxAdapter(
+              child: const _DidYouKnowSection()
+                  .animate()
+                  .fadeIn(delay: 100.ms, duration: 400.ms),
             ),
-          ),
-        ],
+
+            // ── Kebena Heroes ─────────────────────────────────────
+            SliverToBoxAdapter(
+              child: const _HeroesPreviewSection()
+                  .animate()
+                  .fadeIn(delay: 200.ms, duration: 400.ms),
+            ),
+
+            // ── Latest News ───────────────────────────────────────
+            SliverToBoxAdapter(
+              child: const _LatestNewsSection()
+                  .animate()
+                  .fadeIn(delay: 300.ms, duration: 400.ms),
+            ),
+
+            // ── Quick Facts ───────────────────────────────────────
+            SliverToBoxAdapter(
+              child: const _QuickFactsBanner()
+                  .animate()
+                  .fadeIn(delay: 400.ms, duration: 400.ms),
+            ),
+
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: MediaQuery.viewPaddingOf(context).bottom + 80 + 24,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -224,7 +228,7 @@ class _AppBarFlexible extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!.appTitle,
+                                    'Kebena Heritage',
                                     style: TextStyle(
                                       color: fgColor,
                                       fontSize: 16,
@@ -233,7 +237,7 @@ class _AppBarFlexible extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    AppLocalizations.of(context)!.appSubtitle,
+                                    'Special Woreda Portal',
                                     style: TextStyle(
                                       color: fgColor.withValues(alpha: 0.6),
                                       fontSize: 11,
@@ -274,8 +278,8 @@ class _AppBarFlexible extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: Colors.redAccent,
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: bgColor, width: 1.5),
+                                    border:
+                                        Border.all(color: bgColor, width: 1.5),
                                   ),
                                 ),
                               )
@@ -420,7 +424,7 @@ class _HeroBanner extends ConsumerWidget {
                 // Welcome Title
                 Text(
                   AppLocalizations.of(context)!.goodEvening,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -429,7 +433,7 @@ class _HeroBanner extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   AppLocalizations.of(context)!.exploreKebena,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
@@ -466,7 +470,8 @@ class _HeroBanner extends ConsumerWidget {
                                 Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: AppColors.gold.withValues(alpha: 0.2),
+                                    color:
+                                        AppColors.gold.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: const Icon(Icons.volume_up_rounded,
@@ -479,7 +484,8 @@ class _HeroBanner extends ConsumerWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        AppLocalizations.of(context)!.wordOfTheDay,
+                                        AppLocalizations.of(context)!
+                                            .wordOfTheDay,
                                         style: const TextStyle(
                                           color: AppColors.gold,
                                           fontSize: 10,
@@ -1040,7 +1046,8 @@ class _QuickFactsBanner extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(AppLocalizations.of(context)!.quickFacts, style: tt.titleSmall),
+                Text(AppLocalizations.of(context)!.quickFacts,
+                    style: tt.titleSmall),
               ],
             ),
             const SizedBox(height: 14),

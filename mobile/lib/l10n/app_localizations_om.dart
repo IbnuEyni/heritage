@@ -278,4 +278,50 @@ class AppLocalizationsOm extends AppLocalizations {
   String error(String message) {
     return 'Dogoggora: $message';
   }
+
+  @override
+  String get communityEvents => 'Ayyaanaalee Hawaasaa';
+
+  @override
+  String get addToCalendar => 'Kaalaandarii Irratti Ida\'i';
+
+  @override
+  String get markAllRead => 'Hunda Dubbifame Godhi';
+
+  @override
+  String get clearAll => 'Hunda Haqi';
+
+  @override
+  String get clearAllNotifications => 'Beeksisaalee hunda haqi?';
+
+  @override
+  String get cannotBeUndone => 'Kun deebi\'ee hojii irra ooluu hin danda\'u.';
+
+  @override
+  String get noNotificationsYet => 'Ammaaf beeksisa hin jiru';
+
+  @override
+  String get notificationsSubtitle =>
+      'Haaromsa Aanaa Kebena irraa asitti argita';
+
+  @override
+  String get theFullStory => 'Seenaa Guutuu';
+
+  @override
+  String get source => 'Madda';
+
+  @override
+  String get theStory => 'Seenaa';
+
+  @override
+  String get legacySection => 'Dhaalaa Dhalootaaf';
+
+  @override
+  String get kebenaAssistant => 'Gargaaraa Kebena';
+
+  @override
+  String get askAnythingKebena => 'Waa\'ee Kebena waa\'ee kamiyyuu gaafadhu';
+
+  @override
+  String get askAboutKebena => 'Waa\'ee Kebena gaafadhu…';
 }

@@ -64,7 +64,7 @@ class _DictionaryDetailScreenState extends State<DictionaryDetailScreen> {
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
       appBar: AppBar(
-        title: const Text('Affoo Dictionary'),
+        title: Text(AppLocalizations.of(context)!.affooDictionary),
         actions: [
           IconButton(
             icon: const Icon(Icons.copy_rounded, size: 20),

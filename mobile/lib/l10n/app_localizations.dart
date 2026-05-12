@@ -424,7 +424,7 @@ abstract class AppLocalizations {
   /// **'System default'**
   String get themeSystem;
 
-  /// Settings notifications section
+  /// Notifications screen title
   ///
   /// In en, this message translates to:
   /// **'Notifications'**
@@ -609,6 +609,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error: {message}'**
   String error(String message);
+
+  /// Events screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Community Events'**
+  String get communityEvents;
+
+  /// Add to calendar button
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Calendar'**
+  String get addToCalendar;
+
+  /// Mark all notifications read
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// Clear all tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get clearAll;
+
+  /// Clear notifications dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all notifications?'**
+  String get clearAllNotifications;
+
+  /// Clear notifications dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'This cannot be undone.'**
+  String get cannotBeUndone;
+
+  /// Notifications empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotificationsYet;
+
+  /// Notifications empty state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll see updates from Kebena Woreda here'**
+  String get notificationsSubtitle;
+
+  /// Did you know detail section header
+  ///
+  /// In en, this message translates to:
+  /// **'The Full Story'**
+  String get theFullStory;
+
+  /// Source label
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get source;
+
+  /// Hero detail story section
+  ///
+  /// In en, this message translates to:
+  /// **'The Story'**
+  String get theStory;
+
+  /// Hero detail legacy section
+  ///
+  /// In en, this message translates to:
+  /// **'Legacy for This Generation'**
+  String get legacySection;
+
+  /// Chat screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Kebena Assistant'**
+  String get kebenaAssistant;
+
+  /// Chat screen subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Ask anything about Kebena'**
+  String get askAnythingKebena;
+
+  /// Chat input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Ask about Kebena…'**
+  String get askAboutKebena;
 }
 
 class _AppLocalizationsDelegate
