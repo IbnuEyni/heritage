@@ -1,0 +1,31 @@
+{% extends 'admin/base.html' %}
+{% block title %}Dashboard — Kebena Admin{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+  <a class="stat-card" href="{{ url_for('admin.heritage_list') }}">
+    <div class="num">{{ counts.heritage }}</div>
+    <div class="lbl">🏺 Heritage</div>
+  </a>
+  <a class="stat-card" href="{{ url_for('admin.news_list') }}">
+    <div class="num">{{ counts.news }}</div>
+    <div class="lbl">📰 News</div>
+  </a>
+  <a class="stat-card" href="{{ url_for('admin.heroes_list') }}">
+    <div class="num">{{ counts.heroes }}</div>
+    <div class="lbl">⚔️ Heroes</div>
+  </a>
+  <a class="stat-card" href="{{ url_for('admin.dictionary_list') }}">
+    <div class="num">{{ counts.dictionary }}</div>
+    <div class="lbl">📖 Dictionary</div>
+  </a>
+  <a class="stat-card" href="{{ url_for('admin.events_list') }}">
+    <div class="num">{{ counts.events }}</div>
+    <div class="lbl">📅 Events</div>
+  </a>
+  <a class="stat-card" href="{{ url_for('admin.dyk_list') }}">
+    <div class="num">{{ counts.did_you_know }}</div>
+    <div class="lbl">💡 Did You Know</div>
+  </a>
+</div>
+{% endblock %}

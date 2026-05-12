@@ -1,0 +1,47 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Edit' if item else 'New' }} News — Kebena Admin{% endblock %}
+{% block page_title %}{{ 'Edit' if item else 'New' }} News Article{% endblock %}
+{% block content %}
+{% set action = url_for('admin.news_update', id=item.id) if item else url_for('admin.news_create') %}
+<div class="card" style="max-width:800px">
+  <form method="post" action="{{ action }}" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="form-group span2">
+        <label>Title *</label>
+        <input type="text" name="title" value="{{ item.title if item }}" required />
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select name="category">
+          {% for cat in ['News', 'Woreda', 'Culture'] %}
+            <option value="{{ cat }}" {{ 'selected' if item and item.category == cat }}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Image Upload</label>
+        <input type="file" name="image" accept="image/*" />
+        {% if item and item.image_url %}
+          <span class="hint">Current: <a href="{{ item.image_url }}" target="_blank">view</a> — upload to replace</span>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" name="image_url" value="{{ item.image_url if item }}" placeholder="https://... (optional)" />
+      </div>
+      <div class="form-group">
+        <label>Video URL <span class="hint">(optional)</span></label>
+        <input type="text" name="video_url" value="{{ item.video_url if item }}" placeholder="https://... (optional)" />
+      </div>
+      <div class="form-group span2">
+        <label>Content *</label>
+        <textarea name="content" rows="10" required>{{ item.content if item }}</textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{{ 'Save Changes' if item else 'Create Article' }}</button>
+      <a href="{{ url_for('admin.news_list') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

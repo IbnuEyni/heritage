@@ -1,0 +1,36 @@
+{% extends 'admin/base.html' %}
+{% block title %}Did You Know — Kebena Admin{% endblock %}
+{% block page_title %}Did You Know{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>All Entries ({{ items|length }})</h3>
+    <a href="{{ url_for('admin.dyk_new') }}" class="btn btn-primary">+ New Entry</a>
+  </div>
+  <table>
+    <thead><tr><th>Emoji</th><th>Label</th><th>Category</th><th>Accent</th><th>Fact</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+    <tr>
+      <td style="font-size:1.5rem;text-align:center">{{ item.emoji }}</td>
+      <td><strong>{{ item.label }}</strong></td>
+      <td style="color:var(--muted);font-size:.85rem">{{ item.category }}</td>
+      <td>
+        <span class="color-preview" style="background:{{ item.accent_color }}"></span>
+        <span style="font-size:.8rem;color:var(--muted)">{{ item.accent_color }}</span>
+      </td>
+      <td class="truncate" style="color:var(--muted);font-size:.85rem">{{ item.fact }}</td>
+      <td>
+        <a href="{{ url_for('admin.dyk_edit', id=item.id) }}" class="btn btn-sm btn-edit">Edit</a>
+        <form method="post" action="{{ url_for('admin.dyk_delete', id=item.id) }}" style="display:inline" onsubmit="return confirm('Delete this entry?')">
+          <button class="btn btn-sm btn-delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">No entries yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

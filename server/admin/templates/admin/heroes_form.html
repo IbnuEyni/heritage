@@ -1,0 +1,71 @@
+{% extends 'admin/base.html' %}
+{% block title %}{{ 'Edit' if item else 'New' }} Hero — Kebena Admin{% endblock %}
+{% block page_title %}{{ 'Edit' if item else 'New' }} Hero{% endblock %}
+{% block content %}
+{% set action = url_for('admin.heroes_update', id=item.id) if item else url_for('admin.heroes_create') %}
+<div class="card" style="max-width:900px">
+  <form method="post" action="{{ action }}" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" name="name" value="{{ item.name if item }}" required />
+      </div>
+      <div class="form-group">
+        <label>Title / Role *</label>
+        <input type="text" name="title" value="{{ item.title if item }}" placeholder="e.g. Imam, Sheikh, Garad" required />
+      </div>
+      <div class="form-group">
+        <label>Era *</label>
+        <input type="text" name="era" value="{{ item.era if item }}" required />
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select name="category">
+          {% for cat in ['Warrior', 'Scholar', 'Leader', 'Spiritual'] %}
+            <option value="{{ cat }}" {{ 'selected' if item and item.category == cat }}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Birth Year</label>
+        <input type="text" name="birth_year" value="{{ item.birth_year if item }}" placeholder="e.g. 1420" />
+      </div>
+      <div class="form-group">
+        <label>Death Year</label>
+        <input type="text" name="death_year" value="{{ item.death_year if item }}" placeholder="e.g. 1490" />
+      </div>
+      <div class="form-group">
+        <label>Image Upload</label>
+        <input type="file" name="image" accept="image/*" />
+        {% if item and item.image_url %}
+          <span class="hint">Current: <a href="{{ item.image_url }}" target="_blank">view</a> — upload to replace</span>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" name="image_url" value="{{ item.image_url if item }}" placeholder="https://... (optional)" />
+      </div>
+      <div class="form-group span2">
+        <label>Short Bio * (1–2 sentences)</label>
+        <textarea name="short_bio" rows="3" required>{{ item.short_bio if item }}</textarea>
+      </div>
+      <div class="form-group span2">
+        <label>Bravery Quote</label>
+        <input type="text" name="bravery_quote" value="{{ item.bravery_quote if item }}" />
+      </div>
+      <div class="form-group span2">
+        <label>Full Story *</label>
+        <textarea name="full_story" rows="8" required>{{ item.full_story if item }}</textarea>
+      </div>
+      <div class="form-group span2">
+        <label>Legacy *</label>
+        <textarea name="legacy" rows="4" required>{{ item.legacy if item }}</textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{{ 'Save Changes' if item else 'Create Hero' }}</button>
+      <a href="{{ url_for('admin.heroes_list') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,473 @@
+openapi: 3.0.3
+
+info:
+  title: Kebena Heritage API
+  version: 1.0.0
+  description: |
+    ## Overview
+    The **Kebena Heritage API** is the authoritative backend service powering the Kebena Heritage
+    mobile application. It exposes curated cultural content, a bilingual dictionary, community news,
+    and push-notification delivery for the Kebena community.
+
+    ## Authentication
+    Protected endpoints require a **Bearer JWT** token obtained from `POST /api/auth/login`.
+    Pass the token in every subsequent request:
+    ```
+    Authorization: Bearer <token>
+    ```
+
+    ## Rate Limiting
+    | Tier | Limit |
+    |------|-------|
+    | Public endpoints | 120 req / min |
+    | Authenticated endpoints | 300 req / min |
+
+    ## Versioning
+    The current stable version is **v1**. Breaking changes will be introduced under a new path prefix.
+
+    ## Support
+    Contact the platform team at **api-support@kebena-heritage.et**
+  contact:
+    name: Kebena Heritage Platform Team
+    email: api-support@kebena-heritage.et
+  license:
+    name: Proprietary
+    identifier: LicenseRef-Proprietary
+
+servers:
+  - url: https://api.kebena-heritage.et
+    description: Production
+  - url: https://staging-api.kebena-heritage.et
+    description: Staging
+  - url: http://localhost:8000
+    description: Local development
+
+tags:
+  - name: Authentication
+    description: Admin identity and token issuance
+  - name: Heritage
+    description: Cultural heritage articles ordered by historical era
+  - name: Dictionary
+    description: Kebena to Amharic to English lexicon with audio
+  - name: News
+    description: Community news feed with FCM push-notification delivery
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT issued by POST /api/auth/login. Expires after 7 days.
+
+  schemas:
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          example: admin
+        password:
+          type: string
+          format: password
+          example: "s3cr3t!"
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Signed JWT valid for 7 days
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    HeritageArticle:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+        title:
+          type: string
+          example: "The Founding of Kebena"
+        content:
+          type: string
+          example: "Kebena is one of the oldest sub-cities of Addis Ababa..."
+        era:
+          type: string
+          example: "19th Century"
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://cdn.kebena-heritage.et/images/founding.jpg"
+
+    HeritageCreateRequest:
+      type: object
+      required: [title, content, era]
+      properties:
+        title:
+          type: string
+          maxLength: 200
+          example: "The Founding of Kebena"
+        content:
+          type: string
+          example: "Kebena is one of the oldest sub-cities of Addis Ababa..."
+        era:
+          type: string
+          maxLength: 100
+          example: "19th Century"
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://cdn.kebena-heritage.et/images/founding.jpg"
+
+    DictionaryEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 42
+        kebena_word:
+          type: string
+          example: "ቀበና"
+        amharic_translation:
+          type: string
+          example: "ቀበና ሰፈር"
+        english_translation:
+          type: string
+          example: "Kebena neighbourhood"
+        audio_url:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://cdn.kebena-heritage.et/audio/kebena.mp3"
+        category:
+          type: string
+          nullable: true
+          example: "Place Names"
+
+    DictionaryCreateRequest:
+      type: object
+      required: [kebena_word, amharic_translation, english_translation]
+      properties:
+        kebena_word:
+          type: string
+          maxLength: 200
+          example: "ቀበና"
+        amharic_translation:
+          type: string
+          maxLength: 200
+          example: "ቀበና ሰፈር"
+        english_translation:
+          type: string
+          maxLength: 200
+          example: "Kebena neighbourhood"
+        audio_url:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://cdn.kebena-heritage.et/audio/kebena.mp3"
+        category:
+          type: string
+          nullable: true
+          example: "Place Names"
+
+    NewsArticle:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 7
+        title:
+          type: string
+          example: "Annual Kebena Cultural Festival 2025"
+        content:
+          type: string
+          example: "The annual festival will be held on..."
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://cdn.kebena-heritage.et/images/festival.jpg"
+        category:
+          type: string
+          enum: [News, Culture, Woreda]
+          example: "Culture"
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+          example: "2025-06-15T09:30:00"
+
+    NewsCreateRequest:
+      type: object
+      required: [title, content]
+      properties:
+        title:
+          type: string
+          maxLength: 200
+          example: "Annual Kebena Cultural Festival 2025"
+        content:
+          type: string
+          example: "The annual festival will be held on..."
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://cdn.kebena-heritage.et/images/festival.jpg"
+        category:
+          type: string
+          enum: [News, Culture, Woreda]
+          default: News
+          example: "Culture"
+
+    NewsPaginatedResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewsArticle'
+        total:
+          type: integer
+          example: 84
+        pages:
+          type: integer
+          example: 9
+        page:
+          type: integer
+          example: 1
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid credentials"
+
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Missing required field: title"
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid JWT token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Missing Authorization Header"
+
+    UnprocessableEntity:
+      description: Validation error — malformed request body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number (1-based)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PerPageParam:
+      name: per_page
+      in: query
+      description: Items per page (max 100)
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+
+paths:
+
+  /api/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Admin login
+      description: |
+        Authenticates an admin user and returns a signed JWT.
+        The token must be included as a `Bearer` token in the `Authorization`
+        header for all protected endpoints.
+      operationId: adminLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid username or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Invalid credentials"
+
+  /api/heritage/:
+    get:
+      tags: [Heritage]
+      summary: List all heritage articles
+      description: Returns all heritage articles sorted by historical era ascending.
+      operationId: listHeritage
+      responses:
+        '200':
+          description: Array of heritage articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeritageArticle'
+
+    post:
+      tags: [Heritage]
+      summary: Create a heritage article
+      description: Creates a new heritage article. Requires admin JWT.
+      operationId: createHeritage
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeritageCreateRequest'
+      responses:
+        '201':
+          description: Article created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeritageArticle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /api/dictionary/:
+    get:
+      tags: [Dictionary]
+      summary: Search the Kebena dictionary
+      description: |
+        Returns all dictionary entries. Optionally filter with the `q` parameter,
+        which performs a case-insensitive substring search across
+        `kebena_word`, `amharic_translation`, and `english_translation`.
+      operationId: searchDictionary
+      parameters:
+        - name: q
+          in: query
+          description: Search term (substring match across all three language fields)
+          required: false
+          schema:
+            type: string
+            example: "ቀበና"
+      responses:
+        '200':
+          description: Matching dictionary entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DictionaryEntry'
+
+    post:
+      tags: [Dictionary]
+      summary: Add a dictionary entry
+      description: Adds a new word to the trilingual dictionary. Requires admin JWT.
+      operationId: addDictionaryEntry
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DictionaryCreateRequest'
+      responses:
+        '201':
+          description: Entry created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DictionaryEntry'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /api/news/:
+    get:
+      tags: [News]
+      summary: List news articles (paginated)
+      description: Returns a paginated list of news articles sorted by timestamp descending.
+      operationId: listNews
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Paginated news response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsPaginatedResponse'
+
+    post:
+      tags: [News]
+      summary: Publish a news article
+      description: |
+        Creates a news article and triggers an FCM push notification to the
+        matching topic based on `category`:
+
+        | Category | FCM Topic |
+        |----------|-----------|
+        | `News` | `woreda_updates` |
+        | `Woreda` | `woreda_updates` |
+        | `Culture` | `cultural_events` |
+
+        Requires admin JWT.
+      operationId: createNews
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsCreateRequest'
+      responses:
+        '201':
+          description: Article published and push notification dispatched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsArticle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'

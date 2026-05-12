@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kebena Heritage API — Documentation</title>
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui.css" />
+  <style>
+    /* ── Brand tokens ─────────────────────────────────────────── */
+    :root {
+      --brand-primary:   #1a6b3c;   /* deep heritage green        */
+      --brand-accent:    #c8922a;   /* Ethiopian gold             */
+      --brand-dark:      #0d1f14;
+      --brand-surface:   #f5f7f5;
+      --brand-border:    #d4e0d8;
+      --font-sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* ── Reset / base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--brand-surface);
+      color: #1a1a1a;
+    }
+
+    /* ── Top navigation bar ───────────────────────────────────── */
+    .kb-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: var(--brand-dark);
+      border-bottom: 3px solid var(--brand-accent);
+      box-shadow: 0 2px 12px rgba(0,0,0,.45);
+    }
+
+    .kb-navbar__brand {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      text-decoration: none;
+    }
+
+    .kb-navbar__logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--brand-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .kb-navbar__title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .02em;
+    }
+
+    .kb-navbar__title span {
+      color: var(--brand-accent);
+    }
+
+    .kb-navbar__badges {
+      display: flex;
+      gap: .5rem;
+    }
+
+    .kb-badge {
+      padding: .25rem .65rem;
+      border-radius: 999px;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .kb-badge--version  { background: var(--brand-primary); color: #fff; }
+    .kb-badge--oas      { background: #2d6a9f; color: #fff; }
+    .kb-badge--live     { background: #1e7e34; color: #fff; animation: pulse 2s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .6; }
+    }
+
+    /* ── Hero banner ──────────────────────────────────────────── */
+    .kb-hero {
+      background: linear-gradient(135deg, var(--brand-dark) 0%, #1a3d26 60%, #2a5c3a 100%);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--brand-border);
+    }
+
+    .kb-hero__eyebrow {
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--brand-accent);
+      margin-bottom: .6rem;
+    }
+
+    .kb-hero__heading {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: .5rem;
+    }
+
+    .kb-hero__sub {
+      font-size: .95rem;
+      color: #a8c4b0;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
+    .kb-hero__stats {
+      display: inline-flex;
+      gap: 2rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      padding: .9rem 2rem;
+    }
+
+    .kb-stat { text-align: center; }
+    .kb-stat__value { font-size: 1.4rem; font-weight: 700; color: var(--brand-accent); }
+    .kb-stat__label { font-size: .7rem; color: #8aab96; text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── Quick-start cards ────────────────────────────────────── */
+    .kb-quickstart {
+      display: flex;
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      background: #fff;
+      border-bottom: 1px solid var(--brand-border);
+      overflow-x: auto;
+    }
+
+    .kb-card {
+      flex: 1;
+      min-width: 200px;
+      border: 1px solid var(--brand-border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      background: var(--brand-surface);
+    }
+
+    .kb-card__icon { font-size: 1.4rem; margin-bottom: .4rem; }
+    .kb-card__title { font-size: .8rem; font-weight: 700; color: var(--brand-primary); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .3rem; }
+    .kb-card__body  { font-size: .78rem; color: #555; line-height: 1.5; }
+
+    .kb-card code {
+      background: #e8f0eb;
+      color: var(--brand-primary);
+      padding: .1rem .35rem;
+      border-radius: 4px;
+      font-size: .75rem;
+    }
+
+    /* ── Swagger UI overrides ─────────────────────────────────── */
+    #swagger-ui { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+    /* hide default swagger topbar */
+    .swagger-ui .topbar { display: none !important; }
+
+    /* info block */
+    .swagger-ui .info { margin: 0 0 1.5rem; }
+    .swagger-ui .info .title { color: var(--brand-primary); font-size: 1.6rem; }
+    .swagger-ui .info a { color: var(--brand-primary); }
+
+    /* server selector */
+    .swagger-ui .scheme-container {
+      background: #fff;
+      border: 1px solid var(--brand-border);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      box-shadow: none;
+    }
+
+    /* tag headings */
+    .swagger-ui .opblock-tag {
+      border-bottom: 2px solid var(--brand-border);
+      font-size: 1rem !important;
+      font-weight: 700 !important;
+      color: var(--brand-dark) !important;
+    }
+
+    .swagger-ui .opblock-tag:hover { background: #eef4f0 !important; }
+
+    /* operation blocks */
+    .swagger-ui .opblock { border-radius: 8px !important; border: 1px solid var(--brand-border) !important; margin-bottom: .5rem !important; box-shadow: none !important; }
+    .swagger-ui .opblock.opblock-get    { border-left: 4px solid #2d6a9f !important; background: #f0f6ff !important; }
+    .swagger-ui .opblock.opblock-post   { border-left: 4px solid #1e7e34 !important; background: #f0fff4 !important; }
+    .swagger-ui .opblock.opblock-put    { border-left: 4px solid #c8922a !important; background: #fffbf0 !important; }
+    .swagger-ui .opblock.opblock-delete { border-left: 4px solid #c0392b !important; background: #fff5f5 !important; }
+    .swagger-ui .opblock.opblock-patch  { border-left: 4px solid #7b2d8b !important; background: #fdf5ff !important; }
+
+    /* method badges */
+    .swagger-ui .opblock-summary-method { border-radius: 5px !important; font-weight: 700 !important; min-width: 70px !important; }
+
+    /* Authorize button */
+    .swagger-ui .btn.authorize {
+      background: var(--brand-primary) !important;
+      border-color: var(--brand-primary) !important;
+      color: #fff !important;
+      border-radius: 6px !important;
+      font-weight: 600 !important;
+    }
+
+    .swagger-ui .btn.authorize svg { fill: #fff !important; }
+
+    /* Execute button */
+    .swagger-ui .btn.execute {
+      background: var(--brand-accent) !important;
+      border-color: var(--brand-accent) !important;
+      color: #fff !important;
+      border-radius: 6px !important;
+      font-weight: 600 !important;
+    }
+
+    /* Models section */
+    .swagger-ui section.models { border: 1px solid var(--brand-border) !important; border-radius: 8px !important; }
+    .swagger-ui section.models h4 { color: var(--brand-primary) !important; }
+
+    /* response codes */
+    .swagger-ui .response-col_status { font-weight: 700; }
+    .swagger-ui table.responses-table .response-col_status { color: var(--brand-primary); }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    .kb-footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .75rem;
+      color: #888;
+      border-top: 1px solid var(--brand-border);
+      background: #fff;
+    }
+
+    .kb-footer a { color: var(--brand-primary); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ──────────────────────────────────────────────── -->
+  <nav class="kb-navbar">
+    <a class="kb-navbar__brand" href="#">
+      <div class="kb-navbar__logo">🏛️</div>
+      <span class="kb-navbar__title">Kebena <span>Heritage</span> API</span>
+    </a>
+    <div class="kb-navbar__badges">
+      <span class="kb-badge kb-badge--version">v1.0.0</span>
+      <span class="kb-badge kb-badge--oas">OAS 3.0</span>
+      <span class="kb-badge kb-badge--live">● Live</span>
+    </div>
+  </nav>
+
+  <!-- ── Hero ────────────────────────────────────────────────── -->
+  <header class="kb-hero">
+    <p class="kb-hero__eyebrow">Developer Documentation</p>
+    <h1 class="kb-hero__heading">Kebena Heritage REST API</h1>
+    <p class="kb-hero__sub">
+      The authoritative backend powering cultural heritage content, a trilingual dictionary,
+      community news, and Firebase push notifications for the Kebena community.
+    </p>
+    <div class="kb-hero__stats">
+      <div class="kb-stat"><div class="kb-stat__value">4</div><div class="kb-stat__label">Modules</div></div>
+      <div class="kb-stat"><div class="kb-stat__value">8</div><div class="kb-stat__label">Endpoints</div></div>
+      <div class="kb-stat"><div class="kb-stat__value">JWT</div><div class="kb-stat__label">Auth</div></div>
+      <div class="kb-stat"><div class="kb-stat__value">FCM</div><div class="kb-stat__label">Push</div></div>
+    </div>
+  </header>
+
+  <!-- ── Quick-start cards ───────────────────────────────────── -->
+  <section class="kb-quickstart">
+    <div class="kb-card">
+      <div class="kb-card__icon">🔐</div>
+      <div class="kb-card__title">Authentication</div>
+      <div class="kb-card__body">
+        Call <code>POST /api/auth/login</code> to receive a JWT, then click
+        <strong>Authorize</strong> above and paste the token.
+      </div>
+    </div>
+    <div class="kb-card">
+      <div class="kb-card__icon">🏛️</div>
+      <div class="kb-card__title">Heritage</div>
+      <div class="kb-card__body">
+        Browse cultural articles via <code>GET /api/heritage/</code>.
+        Sorted by historical era. No auth required.
+      </div>
+    </div>
+    <div class="kb-card">
+      <div class="kb-card__icon">📖</div>
+      <div class="kb-card__title">Dictionary</div>
+      <div class="kb-card__body">
+        Search Kebena ↔ Amharic ↔ English with <code>?q=</code>.
+        Substring match across all three language fields.
+      </div>
+    </div>
+    <div class="kb-card">
+      <div class="kb-card__icon">📰</div>
+      <div class="kb-card__title">News</div>
+      <div class="kb-card__body">
+        Paginated feed via <code>?page=&per_page=</code>.
+        Publishing triggers FCM push to topic subscribers.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Swagger UI ──────────────────────────────────────────── -->
+  <main id="swagger-ui"></main>
+
+  <!-- ── Footer ──────────────────────────────────────────────── -->
+  <footer class="kb-footer">
+    Kebena Heritage Platform &nbsp;·&nbsp;
+    <a href="mailto:api-support@kebena-heritage.et">api-support@kebena-heritage.et</a>
+    &nbsp;·&nbsp; OpenAPI 3.0.3
+  </footer>
+
+  <script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-standalone-preset.js"></script>
+  <script>
+    SwaggerUIBundle({
+      url: './openapi.yaml',
+      dom_id: '#swagger-ui',
+      presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+      layout: 'StandaloneLayout',
+      deepLinking: true,
+      displayRequestDuration: true,
+      defaultModelsExpandDepth: 1,
+      defaultModelExpandDepth: 2,
+      docExpansion: 'list',
+      filter: true,
+      showExtensions: true,
+      showCommonExtensions: true,
+      tryItOutEnabled: true,
+      persistAuthorization: true,
+      syntaxHighlight: { activate: true, theme: 'monokai' },
+    });
+  </script>
+</body>
+</html>

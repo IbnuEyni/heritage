@@ -1,0 +1,36 @@
+{% extends 'admin/base.html' %}
+{% block title %}Heroes — Kebena Admin{% endblock %}
+{% block page_title %}Heroes{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>All Heroes ({{ items|length }})</h3>
+    <a href="{{ url_for('admin.heroes_new') }}" class="btn btn-primary">+ New Hero</a>
+  </div>
+  <table>
+    <thead><tr><th>Image</th><th>Name</th><th>Title</th><th>Category</th><th>Era</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+    <tr>
+      <td>
+        {% if item.image_url %}<img src="{{ item.image_url }}" class="thumb" />
+        {% else %}<div class="no-thumb">No img</div>{% endif %}
+      </td>
+      <td>{{ item.name }}</td>
+      <td class="truncate" style="color:var(--muted)">{{ item.title }}</td>
+      <td><span style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-size:.8rem">{{ item.category }}</span></td>
+      <td style="font-size:.85rem">{{ item.era }}</td>
+      <td>
+        <a href="{{ url_for('admin.heroes_edit', id=item.id) }}" class="btn btn-sm btn-edit">Edit</a>
+        <form method="post" action="{{ url_for('admin.heroes_delete', id=item.id) }}" style="display:inline" onsubmit="return confirm('Delete this hero?')">
+          <button class="btn btn-sm btn-delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">No heroes yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

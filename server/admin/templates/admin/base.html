@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Kebena Admin{% endblock %}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --accent: #7c6af7;
+      --accent2: #a78bfa;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2d3148;
+      --success: #22c55e;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --sidebar-w: 220px;
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar { width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-logo { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-logo h1 { font-size: 1.1rem; font-weight: 700; color: var(--accent2); letter-spacing: .5px; }
+    .sidebar-logo span { font-size: .75rem; color: var(--muted); }
+    .sidebar nav { flex: 1; padding: 12px 0; }
+    .sidebar nav a { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--muted); text-decoration: none; font-size: .875rem; transition: background .15s, color .15s; border-left: 3px solid transparent; }
+    .sidebar nav a:hover, .sidebar nav a.active { background: var(--surface2); color: var(--text); border-left-color: var(--accent); }
+    .sidebar nav a .icon { font-size: 1rem; width: 20px; text-align: center; }
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); font-size: .8rem; color: var(--muted); }
+    .sidebar-footer a { color: var(--error); text-decoration: none; }
+    .sidebar-footer a:hover { text-decoration: underline; }
+
+    /* Main */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .topbar h2 { font-size: 1rem; font-weight: 600; }
+    .topbar .admin-badge { font-size: .8rem; color: var(--muted); }
+    .content { padding: 28px; flex: 1; }
+
+    /* Flash messages */
+    .flash { padding: 10px 16px; border-radius: 8px; margin-bottom: 20px; font-size: .875rem; }
+    .flash.success { background: #14532d44; border: 1px solid var(--success); color: var(--success); }
+    .flash.error   { background: #7f1d1d44; border: 1px solid var(--error);   color: var(--error); }
+
+    /* Cards / tables */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .card-header h3 { font-size: 1rem; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+    th { text-align: left; padding: 10px 12px; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+    .truncate { max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; background: var(--surface2); }
+    .no-thumb { width: 44px; height: 44px; border-radius: 6px; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: .7rem; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: .875rem; font-weight: 500; cursor: pointer; border: none; text-decoration: none; transition: opacity .15s; }
+    .btn:hover { opacity: .85; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-sm { padding: 5px 10px; font-size: .8rem; border-radius: 6px; }
+    .btn-edit { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-delete { background: #7f1d1d55; color: var(--error); border: 1px solid #7f1d1d; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+    /* Forms */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-grid.full { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.span2 { grid-column: span 2; }
+    label { font-size: .8rem; color: var(--muted); font-weight: 500; }
+    input, textarea, select {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      border-radius: 8px; padding: 9px 12px; font-size: .875rem; width: 100%;
+      outline: none; transition: border-color .15s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 100px; }
+    .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+    .hint { font-size: .75rem; color: var(--muted); }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; text-decoration: none; color: var(--text); transition: border-color .15s; }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-card .num { font-size: 2rem; font-weight: 700; color: var(--accent2); }
+    .stat-card .lbl { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+
+    /* Login */
+    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; width: 100%; }
+    .login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px; width: 360px; }
+    .login-box h1 { font-size: 1.4rem; margin-bottom: 6px; }
+    .login-box p { color: var(--muted); font-size: .875rem; margin-bottom: 28px; }
+    .color-preview { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); display: inline-block; vertical-align: middle; margin-left: 8px; }
+  </style>
+</head>
+<body>
+{% if session.get('admin_id') %}
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>🏛 Kebena</h1>
+    <span>Admin Panel</span>
+  </div>
+  <nav>
+    <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">
+      <span class="icon">📊</span> Dashboard
+    </a>
+    <a href="{{ url_for('admin.heritage_list') }}" class="{{ 'active' if 'heritage' in request.endpoint }}">
+      <span class="icon">🏺</span> Heritage
+    </a>
+    <a href="{{ url_for('admin.news_list') }}" class="{{ 'active' if 'news' in request.endpoint }}">
+      <span class="icon">📰</span> News
+    </a>
+    <a href="{{ url_for('admin.heroes_list') }}" class="{{ 'active' if 'heroes' in request.endpoint }}">
+      <span class="icon">⚔️</span> Heroes
+    </a>
+    <a href="{{ url_for('admin.dictionary_list') }}" class="{{ 'active' if 'dictionary' in request.endpoint }}">
+      <span class="icon">📖</span> Dictionary
+    </a>
+    <a href="{{ url_for('admin.events_list') }}" class="{{ 'active' if 'events' in request.endpoint }}">
+      <span class="icon">📅</span> Events
+    </a>
+    <a href="{{ url_for('admin.dyk_list') }}" class="{{ 'active' if 'dyk' in request.endpoint }}">
+      <span class="icon">💡</span> Did You Know
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    Logged in as <strong>{{ session.admin_username }}</strong><br>
+    <a href="{{ url_for('admin.logout') }}">Logout</a>
+  </div>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <h2>{% block page_title %}{% endblock %}</h2>
+    <span class="admin-badge">{{ session.admin_username }}</span>
+  </div>
+  <div class="content">
+    {% for cat, msg in get_flashed_messages(with_categories=True) %}
+      <div class="flash {{ cat }}">{{ msg }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+</div>
+{% else %}
+{% block body %}{% endblock %}
+{% endif %}
+</body>
+</html>

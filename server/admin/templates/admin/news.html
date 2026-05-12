@@ -1,0 +1,35 @@
+{% extends 'admin/base.html' %}
+{% block title %}News — Kebena Admin{% endblock %}
+{% block page_title %}News Articles{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>All Articles ({{ items|length }})</h3>
+    <a href="{{ url_for('admin.news_new') }}" class="btn btn-primary">+ New Article</a>
+  </div>
+  <table>
+    <thead><tr><th>Image</th><th>Title</th><th>Category</th><th>Date</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+    <tr>
+      <td>
+        {% if item.image_url %}<img src="{{ item.image_url }}" class="thumb" />
+        {% else %}<div class="no-thumb">No img</div>{% endif %}
+      </td>
+      <td class="truncate">{{ item.title }}</td>
+      <td><span style="background:var(--surface2);padding:2px 8px;border-radius:4px;font-size:.8rem">{{ item.category }}</span></td>
+      <td style="color:var(--muted);font-size:.8rem">{{ item.timestamp.strftime('%b %d, %Y') }}</td>
+      <td>
+        <a href="{{ url_for('admin.news_edit', id=item.id) }}" class="btn btn-sm btn-edit">Edit</a>
+        <form method="post" action="{{ url_for('admin.news_delete', id=item.id) }}" style="display:inline" onsubmit="return confirm('Delete this article?')">
+          <button class="btn btn-sm btn-delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">No articles yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

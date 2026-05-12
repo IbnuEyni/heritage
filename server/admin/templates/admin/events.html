@@ -1,0 +1,36 @@
+{% extends 'admin/base.html' %}
+{% block title %}Events — Kebena Admin{% endblock %}
+{% block page_title %}Events{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3>All Events ({{ items|length }})</h3>
+    <a href="{{ url_for('admin.events_new') }}" class="btn btn-primary">+ New Event</a>
+  </div>
+  <table>
+    <thead><tr><th>Image</th><th>Title</th><th>Location</th><th>Start Date</th><th>End Date</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+    <tr>
+      <td>
+        {% if item.image_url %}<img src="{{ item.image_url }}" class="thumb" />
+        {% else %}<div class="no-thumb">No img</div>{% endif %}
+      </td>
+      <td class="truncate">{{ item.title }}</td>
+      <td style="color:var(--muted)">{{ item.location }}</td>
+      <td style="font-size:.85rem">{{ item.start_date.strftime('%b %d, %Y') }}</td>
+      <td style="font-size:.85rem">{{ item.end_date.strftime('%b %d, %Y') }}</td>
+      <td>
+        <a href="{{ url_for('admin.events_edit', id=item.id) }}" class="btn btn-sm btn-edit">Edit</a>
+        <form method="post" action="{{ url_for('admin.events_delete', id=item.id) }}" style="display:inline" onsubmit="return confirm('Delete this event?')">
+          <button class="btn btn-sm btn-delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">No events yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
