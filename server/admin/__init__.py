@@ -23,16 +23,42 @@ _translator = Translator()
 
 
 def _mymemory_translate(text, src='en', dest='om-ET'):
-    """MyMemory free API — supports Oromo (om-ET), no key needed."""
-    url = (
-        'https://api.mymemory.translated.net/get'
-        f'?q={urllib.parse.quote(text)}&langpair={src}|{dest}'
-    )
-    with urllib.request.urlopen(url, timeout=12) as r:
-        data = json.loads(r.read())
-    if data.get('responseStatus') != 200:
-        raise RuntimeError(data.get('responseDetails', 'MyMemory error'))
-    return data['responseData']['translatedText']
+    """MyMemory free API — supports Oromo (om-ET).
+    Splits text into <=500 char chunks on sentence boundaries to stay
+    within the free tier limit, then joins the results.
+    """
+    # Split into sentences (split on . ! ? followed by space or newline)
+    import re
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+
+    chunks, current = [], ''
+    for sentence in sentences:
+        # If a single sentence exceeds 500 chars, hard-split it
+        if len(sentence) > 490:
+            for i in range(0, len(sentence), 490):
+                chunks.append(sentence[i:i+490])
+        elif len(current) + len(sentence) + 1 > 490:
+            if current:
+                chunks.append(current.strip())
+            current = sentence
+        else:
+            current = (current + ' ' + sentence).strip() if current else sentence
+    if current:
+        chunks.append(current.strip())
+
+    translated_parts = []
+    for chunk in chunks:
+        url = (
+            'https://api.mymemory.translated.net/get'
+            f'?q={urllib.parse.quote(chunk)}&langpair={src}|{dest}'
+        )
+        with urllib.request.urlopen(url, timeout=12) as r:
+            data = json.loads(r.read())
+        if data.get('responseStatus') != 200:
+            raise RuntimeError(data.get('responseDetails', 'MyMemory error'))
+        translated_parts.append(data['responseData']['translatedText'])
+
+    return ' '.join(translated_parts)
 
 
 def _allowed(filename):
@@ -76,10 +102,25 @@ def translate():
         return jsonify({'error': 'dest must be am, om, or en'}), 400
     try:
         if dest == 'om':
-            # Google Translate doesn't support Oromo — use MyMemory API
             translated = _mymemory_translate(text, src='en', dest='om-ET')
         else:
-            translated = _translator.translate(text, dest=dest).text
+            # googletrans handles long text but chunk at 4500 chars to be safe
+            if len(text) > 4500:
+                import re
+                sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+                chunks, current = [], ''
+                for s in sentences:
+                    if len(current) + len(s) + 1 > 4500:
+                        if current: chunks.append(current.strip())
+                        current = s
+                    else:
+                        current = (current + ' ' + s).strip() if current else s
+                if current: chunks.append(current.strip())
+                translated = ' '.join(
+                    _translator.translate(c, dest=dest).text for c in chunks
+                )
+            else:
+                translated = _translator.translate(text, dest=dest).text
         return jsonify({'translated': translated})
     except Exception as e:
         return jsonify({'error': str(e)}), 502
