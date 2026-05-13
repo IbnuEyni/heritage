@@ -154,29 +154,23 @@ class _HeritageAppState extends ConsumerState<HeritageApp> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
+    // Material delegates don't support 'om' — pass 'en' to them.
+    // AppLocalizations is handled separately via context.l which reads
+    // localeProvider directly, bypassing MaterialApp's locale.
+    final materialLocale =
+        locale.languageCode == 'om' ? const Locale('en') : locale;
     return MaterialApp.router(
       title: 'Kebena Heritage',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
-      locale: locale,
-      supportedLocales: _supportedLocales,
+      locale: materialLocale,
+      supportedLocales: const [Locale('en'), Locale('am')],
       localizationsDelegates: [
-        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // om (Oromo) is not supported by GlobalMaterialLocalizations.
-      // Fall back to en for Material widgets while keeping our custom
-      // AppLocalizations strings in Oromo.
-      localeResolutionCallback: (requested, supported) {
-        if (requested == null) return const Locale('en');
-        for (final s in supported) {
-          if (s.languageCode == requested.languageCode) return s;
-        }
-        return const Locale('en');
-      },
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
     );
