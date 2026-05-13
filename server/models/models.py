@@ -13,6 +13,13 @@ def _loc(obj, field, lang):
     return getattr(obj, field)
 
 
+def _clean_url(val):
+    """Return None if the URL is empty or the literal string 'None'."""
+    if not val or val == 'None':
+        return None
+    return val
+
+
 class Heritage(db.Model):
     __tablename__ = 'heritage_table'
     id         = db.Column(db.Integer, primary_key=True)
@@ -37,10 +44,10 @@ class Heritage(db.Model):
             'title':      _loc(self, 'title', lang),
             'content':    _loc(self, 'content', lang),
             'era':        _loc(self, 'era', lang),
-            'image_url':  self.image_url,
-            'video_url':  self.video_url,
+            'image_url':  _clean_url(self.image_url),
+            'video_url':  _clean_url(self.video_url),
             'gallery':    self.gallery or [],
-            'audio_url':  self.audio_url,
+            'audio_url':  _clean_url(self.audio_url),
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
 
@@ -70,9 +77,9 @@ class Dictionary(db.Model):
             'amharic_translation': self.amharic_translation,
             'english_translation': self.english_translation,
             'oromo_translation':   self.oromo_translation,
-            'audio_url':  self.audio_url,
-            'video_url':  self.video_url,
-            'image_url':  self.image_url,
+            'audio_url':  _clean_url(self.audio_url),
+            'video_url':  _clean_url(self.video_url),
+            'image_url':  _clean_url(self.image_url),
             'category':   self.category,
             'examples':   examples,
             'synonyms':   self.synonyms or [],
@@ -101,8 +108,8 @@ class News(db.Model):
             'id': self.id,
             'title':      _loc(self, 'title', lang),
             'content':    _loc(self, 'content', lang),
-            'image_url':  self.image_url,
-            'video_url':  self.video_url,
+            'image_url':  _clean_url(self.image_url),
+            'video_url':  _clean_url(self.video_url),
             'gallery':    self.gallery or [],
             'category':   self.category,
             'timestamp':  self.timestamp.isoformat(),
@@ -191,7 +198,7 @@ class Hero(db.Model):
             'full_story':    _loc(self, 'full_story', lang),
             'legacy':        _loc(self, 'legacy', lang),
             'bravery_quote': _loc(self, 'bravery_quote', lang),
-            'image_url':     self.image_url,
+            'image_url':     _clean_url(self.image_url),
             'category':      self.category,
             'updated_at':    self.updated_at.isoformat() if self.updated_at else None,
         }
