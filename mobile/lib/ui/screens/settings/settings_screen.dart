@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
 
@@ -203,7 +204,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _showLanguageSheet(BuildContext context, WidgetRef ref, Locale current) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(

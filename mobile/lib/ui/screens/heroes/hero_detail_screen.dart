@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/app_theme.dart';
@@ -176,7 +177,7 @@ class HeroDetailScreen extends StatelessWidget {
                   ],
 
                   // full story
-                  _SectionLabel(AppLocalizations.of(context)!.theStory, accent),
+                  _SectionLabel(context.l.theStory, accent),
                   const SizedBox(height: 10),
                   Text(
                     hero.fullStory,
@@ -186,7 +187,7 @@ class HeroDetailScreen extends StatelessWidget {
                   const SizedBox(height: 28),
 
                   // legacy
-                  _SectionLabel(AppLocalizations.of(context)!.legacySection, accent),
+                  _SectionLabel(context.l.legacySection, accent),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(16),

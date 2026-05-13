@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/theme/app_theme.dart';
@@ -35,7 +36,7 @@ class _DictionaryDetailScreenState extends State<DictionaryDetailScreen> {
         setState(() => _ttsState = _TtsState.idle);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.audioUnavailable),
+            content: Text(context.l.audioUnavailable),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.red.shade700,
           ),
@@ -64,16 +65,16 @@ class _DictionaryDetailScreenState extends State<DictionaryDetailScreen> {
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.affooDictionary),
+        title: Text(context.l.affooDictionary),
         actions: [
           IconButton(
             icon: const Icon(Icons.copy_rounded, size: 20),
-            tooltip: AppLocalizations.of(context)!.copyWord,
+            tooltip: context.l.copyWord,
             onPressed: () {
               Clipboard.setData(ClipboardData(text: entry.kebenaWord));
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.wordCopied(entry.kebenaWord)),
+                  content: Text(context.l.wordCopied(entry.kebenaWord)),
                   behavior: SnackBarBehavior.floating,
                   duration: const Duration(seconds: 2),
                 ),
@@ -128,7 +129,7 @@ class _DictionaryDetailScreenState extends State<DictionaryDetailScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    AppLocalizations.of(context)!.affooLanguage,
+                    context.l.affooLanguage,
                     style: tt.bodySmall?.copyWith(color: textSecondary),
                   ),
                   const SizedBox(height: 16),
@@ -158,7 +159,7 @@ class _DictionaryDetailScreenState extends State<DictionaryDetailScreen> {
 
             // ── Translations ─────────────────────────────────────────────
             _SectionCard(
-              title: AppLocalizations.of(context)!.translations,
+              title: context.l.translations,
               cardBg: cardBg,
               border: border,
               child: Column(
@@ -182,7 +183,7 @@ class _DictionaryDetailScreenState extends State<DictionaryDetailScreen> {
             // ── Example sentences ────────────────────────────────────────
             if (entry.examples.isNotEmpty) ...[
               _SectionCard(
-                title: AppLocalizations.of(context)!.exampleSentences,
+                title: context.l.exampleSentences,
                 cardBg: cardBg,
                 border: border,
                 child: Column(
@@ -204,7 +205,7 @@ class _DictionaryDetailScreenState extends State<DictionaryDetailScreen> {
             // ── Synonyms ─────────────────────────────────────────────────
             if (entry.synonyms.isNotEmpty)
               _SectionCard(
-                title: AppLocalizations.of(context)!.synonyms,
+                title: context.l.synonyms,
                 cardBg: cardBg,
                 border: border,
                 child: Wrap(

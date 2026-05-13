@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,7 +16,7 @@ class HeroesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final state = ref.watch(heroesProvider);
     final filter = ref.watch(_heroFilterProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;

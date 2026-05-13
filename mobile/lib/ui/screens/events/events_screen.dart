@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +29,7 @@ class EventsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     return Scaffold(
       appBar: AppBar(title: Text(l.communityEvents)),
       body: ListView.separated(
@@ -47,7 +48,7 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final tt = Theme.of(context).textTheme;
     final cardColor = isDark ? AppColors.darkCard : AppColors.lightCard;

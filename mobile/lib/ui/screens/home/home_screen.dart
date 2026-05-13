@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -28,7 +29,7 @@ class HomeScreen extends ConsumerWidget {
           backgroundColor: AppColors.primary,
           icon: const Icon(Icons.chat_bubble_rounded,
               color: Colors.white, size: 20),
-          label: Text(AppLocalizations.of(context)!.askKebenaAI,
+          label: Text(context.l.askKebenaAI,
               style: const TextStyle(
                   color: Colors.white, fontWeight: FontWeight.w600)),
         ),
@@ -423,7 +424,7 @@ class _HeroBanner extends ConsumerWidget {
                 ),
                 // Welcome Title
                 Text(
-                  AppLocalizations.of(context)!.goodEvening,
+                  context.l.goodEvening,
                   style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 16,
@@ -432,7 +433,7 @@ class _HeroBanner extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  AppLocalizations.of(context)!.exploreKebena,
+                  context.l.exploreKebena,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 34,
@@ -484,7 +485,7 @@ class _HeroBanner extends ConsumerWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        AppLocalizations.of(context)!
+                                        context.l
                                             .wordOfTheDay,
                                         style: const TextStyle(
                                           color: AppColors.gold,
@@ -602,7 +603,7 @@ class _DidYouKnowSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(AppLocalizations.of(context)!.didYouKnow),
+        _SectionHeader(context.l.didYouKnow),
         SizedBox(
           height: 168,
           child: state.when(
@@ -710,7 +711,7 @@ class _DidYouKnowCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(children: [
               Text(
-                AppLocalizations.of(context)!.readMore,
+                context.l.readMore,
                 style: TextStyle(
                   color: accent,
                   fontSize: 11,
@@ -738,8 +739,8 @@ class _HeroesPreviewSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(
-          AppLocalizations.of(context)!.kebenaHeroes,
-          actionLabel: AppLocalizations.of(context)!.seeAll,
+          context.l.kebenaHeroes,
+          actionLabel: context.l.seeAll,
           onAction: () => context.go('/heroes'),
         ),
         SizedBox(
@@ -850,7 +851,7 @@ class _HeroCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(children: [
                       Text(
-                        AppLocalizations.of(context)!.read,
+                        context.l.read,
                         style: TextStyle(
                           color: accent,
                           fontSize: 11,
@@ -883,8 +884,8 @@ class _LatestNewsSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(
-          AppLocalizations.of(context)!.latestNews,
-          actionLabel: AppLocalizations.of(context)!.seeAll,
+          context.l.latestNews,
+          actionLabel: context.l.seeAll,
           onAction: () => context.go('/news'),
         ),
         state.when(
@@ -1046,7 +1047,7 @@ class _QuickFactsBanner extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(AppLocalizations.of(context)!.quickFacts,
+                Text(context.l.quickFacts,
                     style: tt.titleSmall),
               ],
             ),

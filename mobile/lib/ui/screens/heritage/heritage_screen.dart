@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,7 +13,7 @@ class HeritageScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final state = ref.watch(heritageProvider);
     final primary = Theme.of(context).colorScheme.primary;
 
@@ -111,7 +112,7 @@ class _ArticleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final tt = Theme.of(context).textTheme;
     final primary = Theme.of(context).colorScheme.primary;
@@ -201,7 +202,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final primary = Theme.of(context).colorScheme.primary;
     return Center(
       child: Column(
@@ -223,7 +224,7 @@ class _ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),

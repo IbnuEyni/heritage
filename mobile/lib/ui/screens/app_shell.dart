@@ -1,3 +1,4 @@
+import '../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../core/theme/app_theme.dart';
@@ -67,7 +68,7 @@ class _FloatingNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final items = [
       _NavItem(Icons.account_balance_outlined, Icons.account_balance_rounded, l.navHeritage),
       _NavItem(Icons.menu_book_outlined,        Icons.menu_book_rounded,        l.navDictionary),

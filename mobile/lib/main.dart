@@ -138,7 +138,6 @@ class _HeritageAppState extends ConsumerState<HeritageApp> {
   @override
   void initState() {
     super.initState();
-    // Run initial sync on startup
     ref.read(syncServiceProvider).sync();
     _lifecycleListener = AppLifecycleListener(
       onResume: () => ref.read(syncServiceProvider).sync(),
@@ -162,12 +161,22 @@ class _HeritageAppState extends ConsumerState<HeritageApp> {
       themeMode: themeMode,
       locale: locale,
       supportedLocales: _supportedLocales,
-      localizationsDelegates: const [
+      localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      // om (Oromo) is not supported by GlobalMaterialLocalizations.
+      // Fall back to en for Material widgets while keeping our custom
+      // AppLocalizations strings in Oromo.
+      localeResolutionCallback: (requested, supported) {
+        if (requested == null) return const Locale('en');
+        for (final s in supported) {
+          if (s.languageCode == requested.languageCode) return s;
+        }
+        return const Locale('en');
+      },
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
     );

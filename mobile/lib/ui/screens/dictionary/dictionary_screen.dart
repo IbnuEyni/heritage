@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +12,7 @@ class DictionaryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final query   = ref.watch(searchQueryProvider);
     final state   = ref.watch(dictionaryProvider);
     final isDark  = Theme.of(context).brightness == Brightness.dark;
@@ -84,7 +85,7 @@ class DictionaryScreen extends ConsumerWidget {
           data: (result) {
             if (result.failure != null) {
               return Center(
-                child: Text(AppLocalizations.of(context)!.error(result.failure!.message),
+                child: Text(context.l.error(result.failure!.message),
                     style: TextStyle(color: scheme.error)),
               );
             }

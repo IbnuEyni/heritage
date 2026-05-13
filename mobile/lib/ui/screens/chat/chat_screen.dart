@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -140,10 +141,10 @@ class _ChatScreenState extends State<ChatScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context)!.kebenaAssistant,
+                Text(context.l.kebenaAssistant,
                     style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                 Text(
-                  AppLocalizations.of(context)!.askAnythingKebena,
+                  context.l.askAnythingKebena,
                   style: TextStyle(
                     fontSize: 11,
                     color: isDark
@@ -246,7 +247,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         fontSize: 14,
                       ),
                       decoration: InputDecoration(
-                        hintText: AppLocalizations.of(context)!.askAboutKebena,
+                        hintText: context.l.askAboutKebena,
                         hintStyle: TextStyle(
                           color: isDark
                               ? AppColors.darkTextMuted

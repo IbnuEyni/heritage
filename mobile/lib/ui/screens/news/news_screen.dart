@@ -1,3 +1,4 @@
+import '../../../core/utils/l10n_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,7 +14,7 @@ class NewsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l = AppLocalizations.of(context)!;
+    final l = context.l;
     final state = ref.watch(newsProvider);
     final page  = ref.watch(newsPageProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -31,7 +32,7 @@ class NewsScreen extends ConsumerWidget {
           ),
           data: (result) {
             if (result.failure != null) {
-              return Center(child: Text(AppLocalizations.of(context)!.error(result.failure!.message)));
+              return Center(child: Text(context.l.error(result.failure!.message)));
             }
             final items = result.data?.items ?? [];
             if (items.isEmpty) {
@@ -249,7 +250,7 @@ class _PaginationBar extends StatelessWidget {
             onTap: page > 1
                 ? () => ref.read(newsPageProvider.notifier).state--
                 : null,
-            child: Text(AppLocalizations.of(context)!.previousPage,
+            child: Text(context.l.previousPage,
                 style: TextStyle(
                     color: page > 1
                         ? primary
@@ -257,12 +258,12 @@ class _PaginationBar extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontSize: 13)),
           ),
-          Text(AppLocalizations.of(context)!.page(page), style: tt.labelLarge),
+          Text(context.l.page(page), style: tt.labelLarge),
           GestureDetector(
             onTap: hasNext
                 ? () => ref.read(newsPageProvider.notifier).state++
                 : null,
-            child: Text(AppLocalizations.of(context)!.nextPage,
+            child: Text(context.l.nextPage,
                 style: TextStyle(
                     color: hasNext
                         ? primary
