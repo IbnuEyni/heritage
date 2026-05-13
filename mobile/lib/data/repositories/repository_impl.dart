@@ -18,13 +18,13 @@ class HeritageRepository implements IHeritageRepository {
   HeritageRepository(this._isar);
 
   @override
-  Result<List<HeritageEntity>> getHeritage() async {
+  Result<List<HeritageEntity>> getHeritage({String lang = 'en'}) async {
     // Always try network first — don't rely on cache being empty
     final connected = await NetworkInfo.isConnected;
     debugPrint('[HeritageRepo] connected=$connected baseUrl=${AppConstants.baseUrl}');
     if (connected) {
       try {
-        final remote = await ApiClient.fetchHeritage();
+        final remote = await ApiClient.fetchHeritage(lang: lang);
         debugPrint('[HeritageRepo] fetched ${remote.length} articles');
         final articles = remote
             .map((h) => HeritageArticle()
@@ -69,14 +69,14 @@ class DictionaryRepository implements IDictionaryRepository {
   DictionaryRepository(this._isar);
 
   @override
-  Result<List<DictionaryEntity>> getDictionary() => searchDictionary('');
+  Result<List<DictionaryEntity>> getDictionary({String lang = 'en'}) => searchDictionary('', lang: lang);
 
   @override
-  Result<List<DictionaryEntity>> searchDictionary(String query) async {
+  Result<List<DictionaryEntity>> searchDictionary(String query, {String lang = 'en'}) async {
     // Always try to refresh from network when query is empty (full list)
     if (query.isEmpty && await NetworkInfo.isConnected) {
       try {
-        final remote = await ApiClient.fetchDictionary();
+        final remote = await ApiClient.fetchDictionary(lang: lang);
         final entries = remote
             .map((d) => DictionaryEntry()
               ..kebenaWord          = d.kebenaWord
@@ -121,10 +121,10 @@ class NewsRepository implements INewsRepository {
   NewsRepository(this._isar);
 
   @override
-  Result<PaginatedResult<NewsEntity>> getNews({int page = 1}) async {
+  Result<PaginatedResult<NewsEntity>> getNews({int page = 1, String lang = 'en'}) async {
     if (await NetworkInfo.isConnected) {
       try {
-        final remote = await ApiClient.fetchNews(page: page);
+        final remote = await ApiClient.fetchNews(page: page, lang: lang);
         await _isar.cacheNews(page, remote);
         return (data: _toPaginated(remote), failure: null);
       } on DioException catch (e) {
@@ -160,10 +160,10 @@ class HeroesRepository {
   final IsarService _isar;
   HeroesRepository(this._isar);
 
-  Result<List<HeroEntity>> getHeroes() async {
+  Result<List<HeroEntity>> getHeroes({String lang = 'en'}) async {
     if (await NetworkInfo.isConnected) {
       try {
-        final remote = await ApiClient.fetchHeroes();
+        final remote = await ApiClient.fetchHeroes(lang: lang);
         await _isar.syncHeroes(remote.map((h) => HeroItem()
           ..serverId = h.id ..name = h.name ..title = h.title ..era = h.era
           ..birthYear = h.birthYear ..deathYear = h.deathYear
@@ -190,10 +190,10 @@ class DidYouKnowRepository {
   final IsarService _isar;
   DidYouKnowRepository(this._isar);
 
-  Result<List<DidYouKnowEntity>> getDidYouKnow() async {
+  Result<List<DidYouKnowEntity>> getDidYouKnow({String lang = 'en'}) async {
     if (await NetworkInfo.isConnected) {
       try {
-        final remote = await ApiClient.fetchDidYouKnow();
+        final remote = await ApiClient.fetchDidYouKnow(lang: lang);
         await _isar.syncDidYouKnow(remote.map((d) => DidYouKnowItem()
           ..serverId = d.id ..emoji = d.emoji ..label = d.label
           ..fact = d.fact ..detail = d.detail ..accentColor = d.accentColor

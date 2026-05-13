@@ -5,16 +5,16 @@ import '../../core/errors/failures.dart';
 typedef Result<T> = Future<({T? data, Failure? failure})>;
 
 abstract class IHeritageRepository {
-  Result<List<HeritageEntity>> getHeritage();
+  Result<List<HeritageEntity>> getHeritage({String lang = 'en'});
 }
 
 abstract class IDictionaryRepository {
-  Result<List<DictionaryEntity>> getDictionary();
-  Result<List<DictionaryEntity>> searchDictionary(String query);
+  Result<List<DictionaryEntity>> getDictionary({String lang = 'en'});
+  Result<List<DictionaryEntity>> searchDictionary(String query, {String lang = 'en'});
 }
 
 abstract class INewsRepository {
-  Result<PaginatedResult<NewsEntity>> getNews({int page = 1});
+  Result<PaginatedResult<NewsEntity>> getNews({int page = 1, String lang = 'en'});
 }
 
 abstract class IEventsRepository {
