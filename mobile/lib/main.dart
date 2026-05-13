@@ -158,14 +158,14 @@ class _HeritageAppState extends ConsumerState<HeritageApp> {
     // AppLocalizations is handled separately via context.l which reads
     // localeProvider directly, bypassing MaterialApp's locale.
     final materialLocale =
-        locale.languageCode == 'om' ? const Locale('en') : locale;
+        locale.languageCode == 'om' ? const Locale('es') : locale;
     return MaterialApp.router(
       title: 'Kebena Heritage',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
       locale: materialLocale,
-      supportedLocales: const [Locale('en'), Locale('am')],
+      supportedLocales: const [Locale('en'), Locale('am'), Locale('es')],
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
