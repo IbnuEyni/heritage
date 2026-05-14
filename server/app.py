@@ -36,6 +36,7 @@ def create_app():
     from api.v1.heroes     import heroes_bp
     from api.v1.did_you_know import dyk_bp
     from api.v1.tts import tts_bp
+    from api.v1.telegram import telegram_bp
     from admin import admin_bp
 
     app.register_blueprint(heritage_bp,   url_prefix='/api/v1/heritage')
@@ -47,6 +48,7 @@ def create_app():
     app.register_blueprint(heroes_bp,     url_prefix='/api/v1/heroes')
     app.register_blueprint(dyk_bp,        url_prefix='/api/v1/did-you-know')
     app.register_blueprint(tts_bp,        url_prefix='/api/v1/tts')
+    app.register_blueprint(telegram_bp,   url_prefix='/api/v1/telegram')
     app.register_blueprint(admin_bp)
 
     # Health check
