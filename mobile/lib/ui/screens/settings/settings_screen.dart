@@ -23,7 +23,9 @@ final offlineModeProvider = StateNotifierProvider<_BoolNotifier, bool>(
 
 class _BoolNotifier extends StateNotifier<bool> {
   final String _key;
-  _BoolNotifier(this._key, bool defaultVal) : super(defaultVal) { _load(); }
+  _BoolNotifier(this._key, bool defaultVal) : super(defaultVal) {
+    _load();
+  }
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -49,8 +51,8 @@ class SettingsScreen extends ConsumerWidget {
 
     final localeName = switch (locale.languageCode) {
       'am' => 'አማርኛ (Amharic)',
-      'om' => 'Affoo (Kebena)',
-      _    => 'English',
+      'om' => 'Afaan Oromo',
+      _ => 'English',
     };
 
     return Scaffold(
@@ -175,7 +177,8 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showClearCacheDialog(BuildContext context, WidgetRef ref, AppLocalizations l) {
+  void _showClearCacheDialog(
+      BuildContext context, WidgetRef ref, AppLocalizations l) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -237,7 +240,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             _LangOption(
-              label: 'Affoo (Kebena)',
+              label: 'Afan Oromo',
               flag: '🏛️',
               selected: current.languageCode == 'om',
               onTap: () {
@@ -335,7 +338,9 @@ class _SettingsTile extends StatelessWidget {
           (onTap != null
               ? Icon(
                   Icons.chevron_right,
-                  color: isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted,
+                  color: isDark
+                      ? AppColors.darkTextMuted
+                      : AppColors.lightTextMuted,
                   size: 20,
                 )
               : null),
@@ -390,9 +395,13 @@ class _ThemeSelector extends StatelessWidget {
         visualDensity: VisualDensity.compact,
       ),
       segments: const [
-        ButtonSegment(value: ThemeMode.light, icon: Icon(Icons.light_mode, size: 16)),
-        ButtonSegment(value: ThemeMode.system, icon: Icon(Icons.brightness_auto, size: 16)),
-        ButtonSegment(value: ThemeMode.dark, icon: Icon(Icons.dark_mode, size: 16)),
+        ButtonSegment(
+            value: ThemeMode.light, icon: Icon(Icons.light_mode, size: 16)),
+        ButtonSegment(
+            value: ThemeMode.system,
+            icon: Icon(Icons.brightness_auto, size: 16)),
+        ButtonSegment(
+            value: ThemeMode.dark, icon: Icon(Icons.dark_mode, size: 16)),
       ],
       selected: {current},
       onSelectionChanged: (s) => onChanged(s.first),
