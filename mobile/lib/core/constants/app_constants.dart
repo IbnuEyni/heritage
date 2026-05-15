@@ -5,7 +5,7 @@ class AppConstants {
   // 3. For physical device: flutter run --dart-define=BASE_URL=http://<your-ip>:8000/api
   static const String baseUrl = String.fromEnvironment(
     'BASE_URL',
-    defaultValue: 'http://192.168.1.9:8001/api',
+    defaultValue: 'https://heritage-production-4728.up.railway.app/api',
   );
 
   static const String fcmTopicWoreda  = 'woreda_updates';
