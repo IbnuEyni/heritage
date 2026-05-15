@@ -2,17 +2,17 @@
 Telegram Bot Webhook Service
 ─────────────────────────────
 Receives channel_post updates from Telegram and saves them as News articles.
-Images are downloaded and stored locally for permanent access.
+Images are uploaded to Cloudflare R2 for permanent access.
 """
 import os
 import uuid
 import logging
 import requests
 from datetime import datetime
-from flask import current_app
 from extensions import db
 from models.models import News
 from services.fcm_service import send_news_notification
+from services.r2_service import upload_file
 
 logger = logging.getLogger(__name__)
 
@@ -35,15 +35,8 @@ def remove_webhook():
     return resp.json()
 
 
-def _get_upload_dir() -> str:
-    """Get the news upload directory, creating it if needed."""
-    upload_dir = os.path.join(current_app.root_path, 'uploads', 'news')
-    os.makedirs(upload_dir, exist_ok=True)
-    return upload_dir
-
-
 def download_and_save_file(file_id: str) -> str | None:
-    """Download a file from Telegram and save it locally. Returns the relative URL path."""
+    """Download a file from Telegram and upload it to R2. Returns the public URL."""
     if not BOT_TOKEN:
         return None
     try:
@@ -61,18 +54,19 @@ def download_and_save_file(file_id: str) -> str | None:
         if file_resp.status_code != 200:
             return None
 
-        # Determine extension
+        # Determine extension and content type
         ext = os.path.splitext(file_path)[1] or '.jpg'
+        content_type = 'image/jpeg' if ext in ('.jpg', '.jpeg') else f'image/{ext.lstrip(".")}'
         filename = f"{uuid.uuid4().hex}{ext}"
 
-        # Save to uploads/news/
-        upload_dir = _get_upload_dir()
-        save_path = os.path.join(upload_dir, filename)
-        with open(save_path, 'wb') as f:
-            f.write(file_resp.content)
+        # Upload to R2
+        url = upload_file(file_resp.content, filename, content_type)
+        if url:
+            logger.info(f'Saved Telegram image to R2: {url}')
+            return url
 
-        logger.info(f'Saved Telegram image: {filename}')
-        return f'/uploads/news/{filename}'
+        logger.warning('R2 upload failed, image not saved')
+        return None
     except Exception as e:
         logger.error(f'Failed to download Telegram file: {e}')
         return None
