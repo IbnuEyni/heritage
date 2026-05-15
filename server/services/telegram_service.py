@@ -2,13 +2,19 @@
 Telegram Bot Webhook Service
 ─────────────────────────────
 Receives channel_post updates from Telegram and saves them as News articles.
+Images are downloaded and stored locally for permanent access.
 """
 import os
+import uuid
+import logging
 import requests
 from datetime import datetime
+from flask import current_app
 from extensions import db
 from models.models import News
 from services.fcm_service import send_news_notification
+
+logger = logging.getLogger(__name__)
 
 BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 CHANNEL_ID = os.getenv('TELEGRAM_CHANNEL_ID', '')  # e.g. @kebena_news or -100xxxxx
@@ -29,16 +35,47 @@ def remove_webhook():
     return resp.json()
 
 
-def get_file_url(file_id: str) -> str | None:
-    """Get a downloadable URL for a Telegram file."""
+def _get_upload_dir() -> str:
+    """Get the news upload directory, creating it if needed."""
+    upload_dir = os.path.join(current_app.root_path, 'uploads', 'news')
+    os.makedirs(upload_dir, exist_ok=True)
+    return upload_dir
+
+
+def download_and_save_file(file_id: str) -> str | None:
+    """Download a file from Telegram and save it locally. Returns the relative URL path."""
     if not BOT_TOKEN:
         return None
-    resp = requests.get(f'{BASE_URL}/getFile', params={'file_id': file_id})
-    data = resp.json()
-    if data.get('ok'):
+    try:
+        # Get file path from Telegram
+        resp = requests.get(f'{BASE_URL}/getFile', params={'file_id': file_id})
+        data = resp.json()
+        if not data.get('ok'):
+            return None
+
         file_path = data['result']['file_path']
-        return f'https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}'
-    return None
+        download_url = f'https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}'
+
+        # Download the file
+        file_resp = requests.get(download_url, timeout=30)
+        if file_resp.status_code != 200:
+            return None
+
+        # Determine extension
+        ext = os.path.splitext(file_path)[1] or '.jpg'
+        filename = f"{uuid.uuid4().hex}{ext}"
+
+        # Save to uploads/news/
+        upload_dir = _get_upload_dir()
+        save_path = os.path.join(upload_dir, filename)
+        with open(save_path, 'wb') as f:
+            f.write(file_resp.content)
+
+        logger.info(f'Saved Telegram image: {filename}')
+        return f'/uploads/news/{filename}'
+    except Exception as e:
+        logger.error(f'Failed to download Telegram file: {e}')
+        return None
 
 
 def _extract_category(text: str) -> str:
@@ -97,14 +134,14 @@ def process_channel_post(update: dict) -> News | None:
     if photos:
         # Get the largest photo
         largest = max(photos, key=lambda p: p.get('file_size', 0))
-        image_url = get_file_url(largest['file_id'])
+        image_url = download_and_save_file(largest['file_id'])
 
     # Handle video thumbnail
     video = post.get('video')
     if video and not image_url:
         thumb = video.get('thumbnail') or video.get('thumb')
         if thumb:
-            image_url = get_file_url(thumb['file_id'])
+            image_url = download_and_save_file(thumb['file_id'])
 
     # Create News entry
     article = News(
