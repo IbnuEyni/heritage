@@ -12,7 +12,7 @@ os.makedirs(_CACHE_DIR, exist_ok=True)
 # Arabic (ar) shares Afroasiatic phonology with both languages and produces
 # significantly better pronunciation than English for Ethiopic scripts.
 _LANG_MAP = {
-    'kebena':  'ar',   # Oromo — closest free phonetic approximation
+    'kebena':  'es',   # Kebena — Spanish as phonetic approximation
     'amharic': 'ar',   # Amharic — closest free phonetic approximation
     'english': 'en',
 }

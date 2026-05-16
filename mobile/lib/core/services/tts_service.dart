@@ -29,8 +29,7 @@ class TtsService {
     }
     await _player.setFilePath(file.path);
     await _player.seek(Duration.zero);
-    // Amharic and Kebena at 2x speed for clearer pronunciation rhythm
-    await _player.setSpeed(language == 'english' ? 1.0 : 2.0);
+    await _player.setSpeed(1.0);
     await _player.play();
   }
 
