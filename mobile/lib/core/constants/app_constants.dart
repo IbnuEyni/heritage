@@ -8,7 +8,7 @@ class AppConstants {
     defaultValue: 'https://heritage-production-4728.up.railway.app/api',
   );
 
-  static const String fcmTopicWoreda  = 'woreda_updates';
+  static const String fcmTopicWoreda = 'woreda_updates';
   static const String fcmTopicCulture = 'cultural_events';
-  static const int    pageSize        = 10;
+  static const int pageSize = 10;
 }
